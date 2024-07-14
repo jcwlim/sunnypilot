@@ -93,16 +93,16 @@ def register(show_spinner=False) -> str | None:
 
   if dongle_id:
     params.put("DongleId", dongle_id)
-    set_offroad_alert("Offroad_UnofficialHardware", (dongle_id == UNREGISTERED_DONGLE_ID) and not PC)
+    # set_offroad_alert("Offroad_UnofficialHardware", (dongle_id == UNREGISTERED_DONGLE_ID) and not PC)
   # dp - detecting clone device
   if dongle_id == UNREGISTERED_DONGLE_ID:
     params.put_bool("dp_device_is_clone", True)
-    set_offroad_alert("Offroad_UnofficialHardware", False)
+    # set_offroad_alert("Offroad_UnofficialHardware", False)
   else:
     # clean log if no longer clone
     if params.get_bool("dp_device_is_clone"):
-      if not PC:
-        os.system("rm -fr /data/media/0/realdata/*")
+      # if not PC:
+      #   os.system("rm -fr /data/media/0/realdata/*")
       params.put_bool("dp_device_is_clone", False)
   return dongle_id
 

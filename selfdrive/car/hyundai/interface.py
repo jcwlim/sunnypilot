@@ -91,6 +91,12 @@ class CarInterface(CarInterfaceBase):
     ret.vEgoStarting = 0.1
     ret.startAccel = 1.0
     ret.longitudinalActuatorDelay = 0.5
+    ret.stoppingDecelRate = 0.
+    ret.startAccel = 0.
+    ret.stopAccel = 0. #0.2 in previous my setup #1.0 #-0.4
+    # TODO estimate car specific lag, use .15s for now
+    ret.longitudinalActuatorDelay = 0.01
+    ret.minSteerSpeed = 0.
 
     # *** feature detection ***
     if candidate in CANFD_CAR:
