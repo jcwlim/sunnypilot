@@ -184,8 +184,13 @@ class CarInterface(CarInterfaceBase):
     if 0x2AA in fingerprint[0]:
       ret.minSteerSpeed = 0.
 
-    if Params().get_bool("HkgSmoothStop"):
-      ret.vEgoStopping = 0.1
+    if Params().get_bool("HkgCustomLongTuning"):
+      #ret.vEgoStopping = 0.1
+      ret.stoppingDecelRate = 0.
+      ret.startAccel = 0.
+      ret.stopAccel = 0. #0.2 in previous my setup #1.0 #-0.4
+      # TODO estimate car specific lag, use .15s for now
+      #ret.longitudinalActuatorDelay = 0.1 #0.01
 
     return ret
 

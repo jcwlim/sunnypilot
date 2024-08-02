@@ -55,7 +55,7 @@ T_IDXS = np.array(T_IDXS_LST)
 FCW_IDXS = T_IDXS < 5.0
 T_DIFFS = np.diff(T_IDXS, prepend=[0.])
 COMFORT_BRAKE = 2.5
-STOP_DISTANCE = 6.0
+STOP_DISTANCE = 1.0 #6.0
 
 def get_jerk_factor(personality=custom.LongitudinalPersonalitySP.standard):
   if personality==custom.LongitudinalPersonalitySP.relaxed:
@@ -94,8 +94,8 @@ def get_dynamic_personality(v_ego, personality=custom.LongitudinalPersonalitySP.
     x_vel =  [0,    11,   14.5, 15,   20,   20.01,  25,    25.01,  36,  36.01]
     y_dist = [1.3,  1.3,  1.3,  1.35, 1.35, 1.385,  1.385, 1.4,   1.4,  1.45]
   elif personality==custom.LongitudinalPersonalitySP.aggressive:
-    x_vel =  [0,     5,     5.01,  11,    14.5,   15,    20,    20.01,  25, 25.01, 36,   36.01]
-    y_dist = [1.12,  1.12,  1.12,  1.12,  1.12,  1.105, 1.105, 1.15, 1.15, 1.18, 1.20,  1.23]
+    x_vel =  [0,  0.5, 1, 2, 2.5, 3, 3.5, 4, 5,     5.01,  11,    14.5,   15,    20,    20.01,  25, 25.01, 36,   36.01]
+    y_dist = [-1.12,-0.8, -0.95, 1.0, 1.0, 1.05, 1.08, 1.10, 1.12,  1.12,  1.12,  1.12,  1.105, 1.105, 1.15, 1.15, 1.18, 1.20,  1.23]
   else:
     raise NotImplementedError("Dynamic personality not supported")
 
