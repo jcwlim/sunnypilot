@@ -11,7 +11,7 @@ TRAJECTORY_SIZE = 33
 # camera offset is meters from center car to camera
 # model path is in the frame of the camera
 PATH_OFFSET = 0.00
-CAMERA_OFFSET = 0.04
+CAMERA_OFFSET = 1.6 #0.04
 
 
 class LanePlanner:
