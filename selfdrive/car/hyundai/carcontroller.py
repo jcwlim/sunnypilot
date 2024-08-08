@@ -303,8 +303,8 @@ class CarController(CarControllerBase):
         self.lead_distance = self.calculate_lead_distance(hud_control)
 
       if self.frame % 2 == 0 and self.CP.openpilotLongitudinalControl:
-        if self.hkg_can_smooth_stop:
-          stopping = stopping and CS.out.vEgoRaw < 0.05
+        #if self.hkg_can_smooth_stop:
+          #stopping = stopping and CS.out.vEgoRaw < 0.05
 
         # TODO: unclear if this is needed
         jerk = 3.0 if actuators.longControlState == LongCtrlState.pid else 1.0
