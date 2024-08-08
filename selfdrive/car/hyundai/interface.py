@@ -113,7 +113,7 @@ class CarInterface(CarInterfaceBase):
       #ret.startAccel = 0.
       ret.stopAccel = 0. #0.2 in previous my setup #1.0 #-0.4
       # TODO estimate car specific lag, use .15s for now
-      ret.longitudinalActuatorDelay = 0.1 #0.01
+      ret.longitudinalActuatorDelay = 0.2 #0.1 #0.01
     else:
       ret.startingState = True
 
