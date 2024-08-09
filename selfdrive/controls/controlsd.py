@@ -785,7 +785,7 @@ class Controls:
       r_lane_change_prob = desire_prediction[Desire.laneChangeRight]
 
       lane_lines = model_v2.laneLines
-      l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(0.5 + CAMERA_OFFSET))
+      l_lane_close = left_lane_visible and (lane_lines[1].y[0] > (0.5 + CAMERA_OFFSET))
       r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.5 - CAMERA_OFFSET))
 
       hudControl.leftLaneDepart = bool(l_lane_change_prob > LANE_DEPARTURE_THRESHOLD and l_lane_close)
