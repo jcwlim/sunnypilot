@@ -780,7 +780,7 @@ class Controls:
     desire_prediction = model_v2.meta.desirePrediction
     if len(desire_prediction) and ldw_allowed:
       right_lane_visible = model_v2.laneLineProbs[2] > 0.5
-      left_lane_visible = model_v2.laneLineProbs[1] > 0.5
+      left_lane_visible = False #model_v2.laneLineProbs[1] > 0.5
       l_lane_change_prob = desire_prediction[Desire.laneChangeLeft]
       r_lane_change_prob = desire_prediction[Desire.laneChangeRight]
 
