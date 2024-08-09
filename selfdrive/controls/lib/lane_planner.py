@@ -10,7 +10,7 @@ from openpilot.common.swaglog import cloudlog
 TRAJECTORY_SIZE = 33
 # camera offset is meters from center car to camera
 # model path is in the frame of the camera
-PATH_OFFSET = 1.6 #0.00
+PATH_OFFSET = -1.0 #1.6 #0.00
 CAMERA_OFFSET = 2.0 #0.04
 
 

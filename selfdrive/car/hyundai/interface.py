@@ -101,9 +101,9 @@ class CarInterface(CarInterfaceBase):
     ret.openpilotLongitudinalControl = experimental_long and ret.experimentalLongitudinalAvailable
     ret.pcmCruise = not ret.openpilotLongitudinalControl
 
-    ret.stoppingControl = False #True
-    ret.vEgoStarting = 0.5
-    ret.startAccel = 1.0
+    ret.stoppingControl = True
+    ret.vEgoStarting = 0.1 #0.5
+    ret.startAccel = 1.6
     ret.stopAccel = -1.0
     ret.longitudinalActuatorDelay = 0.5
 
@@ -111,7 +111,7 @@ class CarInterface(CarInterfaceBase):
       ret.startingState = False
       #ret.stoppingDecelRate = 0.
       #ret.startAccel = 0.
-      #ret.stopAccel = 0. #0.2 in previous my setup #1.0 #-0.4
+      ret.stopAccel = 0. #0.2 in previous my setup #1.0 #-0.4
       # TODO estimate car specific lag, use .15s for now
       ret.longitudinalActuatorDelay = 0.2 #0.1 #0.01
     else:
@@ -192,8 +192,8 @@ class CarInterface(CarInterfaceBase):
     if 0x2AA in fingerprint[0]:
       ret.minSteerSpeed = 0.
 
-    if Params().get_bool("HkgSmoothStop"):
-      ret.vEgoStopping = 0.1
+    # if Params().get_bool("HkgSmoothStop"):
+    #   ret.vEgoStopping = 0.1
 
     return ret
 
