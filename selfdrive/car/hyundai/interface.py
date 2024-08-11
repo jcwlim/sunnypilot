@@ -120,6 +120,7 @@ class CarInterface(CarInterfaceBase):
     if DBC[ret.carFingerprint]["radar"] is None:
       if ret.spFlags & (HyundaiFlagsSP.SP_ENHANCED_SCC | HyundaiFlagsSP.SP_CAMERA_SCC_LEAD):
         ret.radarUnavailable = False
+        ret.radarTimeStep = 0.02
 
     # *** feature detection ***
     if candidate in CANFD_CAR:
