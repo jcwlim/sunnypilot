@@ -109,7 +109,7 @@ class CarInterface(CarInterfaceBase):
 
     if ret.flags & (HyundaiFlags.HYBRID | HyundaiFlags.EV):
       ret.startingState = False
-      ret.stoppingDecelRate = 0.
+      #ret.stoppingDecelRate = 0.
       #ret.startAccel = 0.
       ret.stopAccel = -2.0 #0. #0.2 in previous my setup #1.0 #-0.4
       # TODO estimate car specific lag, use .15s for now
