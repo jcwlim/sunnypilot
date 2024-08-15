@@ -110,14 +110,14 @@ class CarInterface(CarInterfaceBase):
 
     if ret.flags & (HyundaiFlags.HYBRID | HyundaiFlags.EV):
       ret.startingState = False
-      ret.stopAccel = -2.0
+      ret.stopAccel = 0.
     else:
       ret.startingState = True
       ret.stopAccel = -1.0
 
     if DBC[ret.carFingerprint]["radar"] is None:
       if ret.spFlags & (HyundaiFlagsSP.SP_ENHANCED_SCC | HyundaiFlagsSP.SP_CAMERA_SCC_LEAD):
-        ret.radarTimeStep = 0.05 #0.02
+        ret.radarTimeStep = 0.04 #0.02
         ret.radarUnavailable = False
 
     # *** feature detection ***
