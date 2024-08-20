@@ -509,7 +509,7 @@ class CarController(CarControllerBase):
       self.jerk_l = 5.0
     elif True: #self.CP.carFingerprint in CANFD_CAR or self.CP.carFingerprint == CAR.HYUNDAI_KONA_EV_2022:
       startingJerk = 0.5
-      jerkLimit = 5.0
+      jerkLimit = 2.0
       self.jerk_count += DT_CTRL
       jerk_max = interp(self.jerk_count, [0, 1.5, 2.5], [startingJerk, startingJerk, jerkLimit])
       if actuators.longControlState == LongCtrlState.off:
