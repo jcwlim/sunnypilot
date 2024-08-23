@@ -487,7 +487,7 @@ class CarController(CarControllerBase):
 
   # jerk calculations thanks to apilot!
   def cal_jerk(self, accel, actuators):
-    self.accel_raw = accel
+    self.accel_raw = max(accel, -1.0)
     if actuators.longControlState == LongCtrlState.off:
       accel_diff = 0.0
     elif actuators.longControlState == LongCtrlState.stopping:# or hud_control.softHold > 0:
@@ -495,7 +495,7 @@ class CarController(CarControllerBase):
     else:
       accel_diff = self.accel_raw - self.accel_last_jerk
 
-    accel_diff = max(accel_diff, -1.0)
+    #accel_diff = max(accel_diff, -1.0)
     accel_diff /= DT_CTRL
     self.jerk = self.jerk * 0.9 + accel_diff * 0.1
     return self.jerk
