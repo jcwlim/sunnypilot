@@ -254,6 +254,7 @@ class LongitudinalMpc:
     self.solver = AcadosOcpSolverCython(MODEL_NAME, ACADOS_SOLVER_TYPE, N)
     self.reset()
     self.source = SOURCES[2]
+    self.x_lead = 0
 
     self.e2e_x = np.zeros(13, dtype=np.float64)
 
@@ -335,7 +336,17 @@ class LongitudinalMpc:
   def process_lead(self, lead):
     v_ego = self.x0[1]
     if lead is not None and lead.status:
-      x_lead = lead.dRel
+      new_x_lead = lead.dRel
+
+      if self.x_lead >=100:
+        x_lead = new_x_lead
+      else:
+        if self.x_lead - new_x_lead > 10:
+          x_lead = self.x_lead - 0.2
+        else:
+          x_lead = new_x_lead
+
+      #x_lead = lead.dRel
       v_lead = lead.vLead
       a_lead = lead.aLeadK
       a_lead_tau = lead.aLeadTau
@@ -345,6 +356,8 @@ class LongitudinalMpc:
       v_lead = v_ego + 10.0
       a_lead = 0.0
       a_lead_tau = _LEAD_ACCEL_TAU
+
+    self.x_lead = x_lead
 
     # MPC will not converge if immediate crash is expected
     # Clip lead distance to what is still possible to brake for
