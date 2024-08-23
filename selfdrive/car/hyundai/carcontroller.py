@@ -495,6 +495,7 @@ class CarController(CarControllerBase):
     else:
       accel_diff = self.accel_raw - self.accel_last_jerk
 
+    accel_diff = max(accel_diff, -1.0)
     accel_diff /= DT_CTRL
     self.jerk = self.jerk * 0.9 + accel_diff * 0.1
     return self.jerk
