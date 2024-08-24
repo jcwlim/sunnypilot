@@ -45,6 +45,8 @@ class RadarInterface(RadarInterfaceBase):
                        (RADAR_START_ADDR + RADAR_MSG_COUNT - 1)
     self.track_id = 0
 
+    self.prev_spd = 0
+
     self.radar_off_can = CP.radarUnavailable
     self.rcp = get_radar_can_parser(CP)
 
@@ -98,7 +100,15 @@ class RadarInterface(RadarInterfaceBase):
           self.pts[ii].measured = True
           self.pts[ii].dRel = msg['ACC_ObjDist']
           self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan')
-          self.pts[ii].vRel = msg['ACC_ObjRelSpd']
+          current_spd = msg['ACC_ObjRelSpd']
+          if self.prev_spd == 0:
+            self.prev_spd = current_spd
+          if current_spd - self.prev_spd < -4:
+            current_spd = self.prev_spd - 0.5
+          self.prev_spd = current_spd
+
+          #self.pts[ii].vRel = msg['ACC_ObjRelSpd']
+          self.pts[ii].vRel = current_spd #msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = float('nan')
           self.pts[ii].yvRel = float('nan')
 
