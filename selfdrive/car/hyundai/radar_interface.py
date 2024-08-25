@@ -103,7 +103,7 @@ class RadarInterface(RadarInterfaceBase):
           current_spd = msg['ACC_ObjRelSpd']
           if self.prev_spd == 0:
             self.prev_spd = current_spd
-          if current_spd - self.prev_spd < -4:
+          if current_spd - self.prev_spd < -2: #4:
             current_spd = self.prev_spd - 0.5
           self.prev_spd = current_spd
 
