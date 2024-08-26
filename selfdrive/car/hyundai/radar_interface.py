@@ -99,7 +99,7 @@ class RadarInterface(RadarInterfaceBase):
             self.pts[ii].trackId = self.track_id
             self.track_id += 1
           self.pts[ii].measured = True
-          self.pts[ii].dRel = msg['ACC_ObjDist'] + 2
+          self.pts[ii].dRel = msg['ACC_ObjDist']
 
           current_lat_pos = -msg['ACC_ObjLatPos']
           if not hasattr(self, 'prev_lat_pos') or self.prev_lat_pos == 0:
