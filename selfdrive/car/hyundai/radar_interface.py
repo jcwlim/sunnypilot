@@ -98,13 +98,13 @@ class RadarInterface(RadarInterfaceBase):
             self.pts[ii].trackId = self.track_id
             self.track_id += 1
           self.pts[ii].measured = True
-          self.pts[ii].dRel = msg['ACC_ObjDist']
+          self.pts[ii].dRel = msg['ACC_ObjDist'] + 2
           self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan')
           current_spd = msg['ACC_ObjRelSpd']
           if self.prev_spd == 0:
             self.prev_spd = current_spd
           if current_spd - self.prev_spd < -2: #-4:
-            current_spd = self.prev_spd - 0.5
+            current_spd = self.prev_spd - 0.02
           self.prev_spd = current_spd
 
           #self.pts[ii].vRel = msg['ACC_ObjRelSpd']
