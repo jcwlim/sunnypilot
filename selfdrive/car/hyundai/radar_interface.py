@@ -85,7 +85,7 @@ class RadarInterface(RadarInterfaceBase):
       errors.append("canError")
     ret.errors = errors
 
-    if self.camera_scc: #self.enhanced_scc or self.camera_scc:
+    if self.enhanced_scc or self.camera_scc:
       msg_src = "ESCC" if self.enhanced_scc else \
                 "SCC_CONTROL" if self.CP.carFingerprint in CANFD_CAR else \
                 "SCC11"
