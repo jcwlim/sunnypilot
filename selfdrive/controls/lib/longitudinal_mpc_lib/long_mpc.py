@@ -366,7 +366,7 @@ class LongitudinalMpc:
     x_lead = clip(x_lead, min_x_lead, 1e8)
     v_lead = clip(v_lead, 0.0, 1e8)
     a_lead = clip(a_lead, -10., 5.)
-    a_lead = clip(a_lead, -5., 3.)
+    #a_lead = clip(a_lead, -5., 3.)
     lead_xv = self.extrapolate_lead(x_lead, v_lead, a_lead, a_lead_tau)
     return lead_xv
 
