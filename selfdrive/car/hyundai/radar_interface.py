@@ -107,14 +107,14 @@ class RadarInterface(RadarInterfaceBase):
 
           delta_lat_pos = current_lat_pos - self.prev_lat_pos
           if delta_lat_pos < -4:
-            current_lat_pos = self.prev_lat_pos - 0.2
+            current_lat_pos = self.prev_lat_pos - 0.5
 
           self.prev_lat_pos = current_lat_pos
 
-          #self.pts[ii].yRel = current_lat_pos if self.enhanced_scc else float('nan')
+          self.pts[ii].yRel = current_lat_pos if self.enhanced_scc else float('nan')
 
 
-          self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan')
+          #self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan')
           current_spd = msg['ACC_ObjRelSpd']
           if self.prev_spd == 0:
             self.prev_spd = current_spd
