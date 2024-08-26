@@ -46,6 +46,7 @@ class RadarInterface(RadarInterfaceBase):
     self.track_id = 0
 
     self.prev_spd = 0
+    self.prev_lat_pos = 0
 
     self.radar_off_can = CP.radarUnavailable
     self.rcp = get_radar_can_parser(CP)
@@ -99,7 +100,21 @@ class RadarInterface(RadarInterfaceBase):
             self.track_id += 1
           self.pts[ii].measured = True
           self.pts[ii].dRel = msg['ACC_ObjDist'] + 2
-          self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan')
+
+          current_lat_pos = -msg['ACC_ObjLatPos']
+          if not hasattr(self, 'prev_lat_pos') or self.prev_lat_pos == 0:
+            self.prev_lat_pos = current_lat_pos
+
+          delta_lat_pos = current_lat_pos - self.prev_lat_pos
+          if delta_lat_pos < -4:
+            current_lat_pos = self.prev_lat_pos - 0.2
+
+          self.prev_lat_pos = current_lat_pos
+
+          self.pts[ii].yRel = current_lat_pos if self.enhanced_scc else float('nan')
+
+
+          #self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan')
           current_spd = msg['ACC_ObjRelSpd']
           if self.prev_spd == 0:
             self.prev_spd = current_spd
