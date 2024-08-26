@@ -122,8 +122,8 @@ class RadarInterface(RadarInterfaceBase):
             current_spd = self.prev_spd - 0.05
           self.prev_spd = current_spd
 
-          #self.pts[ii].vRel = msg['ACC_ObjRelSpd']
-          self.pts[ii].vRel = current_spd #msg['ACC_ObjRelSpd']
+          self.pts[ii].vRel = msg['ACC_ObjRelSpd']
+          #self.pts[ii].vRel = current_spd #msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = float('nan')
           self.pts[ii].yvRel = float('nan')
 
