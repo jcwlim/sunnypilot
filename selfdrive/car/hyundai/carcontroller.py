@@ -504,7 +504,7 @@ class CarController(CarControllerBase):
   def cal_jerk(self, accel, actuators):
 
     thresholds = [3.0, 2.5, 2.0]  # Adjust thresholds as needed
-    step_sizes = [1.5, 1.0, 1.0]  # Corresponding step sizes
+    step_sizes = [1.5, 1.0, 1.5]  # Corresponding step sizes
 
 
     # Clamp accel to a minimum of -1.5
@@ -514,11 +514,8 @@ class CarController(CarControllerBase):
     if not hasattr(self, 'accel_raw'):
         self.accel_raw = current_accel_raw
 
-    # Calculate the difference between the current and previous accel values
-    accel_diff = self.accel_raw + current_accel_raw 
-
     for threshold, step in zip(thresholds, step_sizes):
-        if accel_diff < -threshold:
+        if current_accel_raw < -threshold:
             self.accel_raw = max(current_accel_raw,  -step)
             break  # Exit the loop once the appropriate step is applied
     else:
@@ -560,7 +557,7 @@ class CarController(CarControllerBase):
       self.jerk_u = 3.0 if actuators.longControlState == LongCtrlState.pid else 1.0
       self.jerk_l = 5.0
     elif True: #self.CP.carFingerprint in CANFD_CAR or self.CP.carFingerprint == CAR.HYUNDAI_KONA_EV_2022:
-      startingJerk = 0.5
+      startingJerk = 0.1
       jerkLimit = 2.0
       self.jerk_count += DT_CTRL
       jerk_max = interp(self.jerk_count, [0, 1.5, 2.5], [startingJerk, startingJerk, jerkLimit])
