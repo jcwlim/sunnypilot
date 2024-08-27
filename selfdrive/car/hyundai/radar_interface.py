@@ -114,7 +114,7 @@ class RadarInterface(RadarInterfaceBase):
           self.pts[ii].yRel = float('nan')
 
 
-          #self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan')
+          self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan')
           current_spd = msg['ACC_ObjRelSpd']
           if self.prev_spd == 0:
             self.prev_spd = current_spd

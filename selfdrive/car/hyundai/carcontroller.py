@@ -487,7 +487,7 @@ class CarController(CarControllerBase):
 
   # jerk calculations thanks to apilot!
   def cal_jerk(self, accel, actuators):
-    self.accel_raw = max(accel, -2.0)
+    self.accel_raw = max(accel, -1.5)
     #self.accel_raw = accel
     if actuators.longControlState == LongCtrlState.off:
       accel_diff = 0.0
