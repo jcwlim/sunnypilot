@@ -502,6 +502,11 @@ class CarController(CarControllerBase):
   #   return self.jerk
   
   def cal_jerk(self, accel, actuators):
+
+    thresholds = [2.5, 2.0, 1.5]  # Adjust thresholds as needed
+    step_sizes = [1.0, 1.0, 0.5]  # Corresponding step sizes
+
+
     # Clamp accel to a minimum of -1.5
     current_accel_raw = accel
 
@@ -510,15 +515,23 @@ class CarController(CarControllerBase):
         self.accel_raw = current_accel_raw
 
     # Calculate the difference between the current and previous accel values
-    accel_diff = current_accel_raw - self.accel_raw
+    accel_diff = self.accel_raw + current_accel_raw 
+
+    for threshold, step in zip(thresholds, step_sizes):
+        if accel_diff < -threshold:
+            self.accel_raw = self.accel_raw - step
+            break  # Exit the loop once the appropriate step is applied
+    else:
+        # If no threshold is met, set accel_raw directly to the current value
+        self.accel_raw = current_accel_raw
 
     # If the difference is more than -3, gradually adjust the accel_raw value
-    if accel_diff < -3:
-        # Gradually decrease accel_raw by 1.5 steps per frame
-        self.accel_raw = self.accel_raw - 1.5
-    else:
-        # Set accel_raw directly to the current value if the difference is within acceptable range
-        self.accel_raw = current_accel_raw
+    # if accel_diff < -2.5:
+    #     # Gradually decrease accel_raw by 1.5 steps per frame
+    #     self.accel_raw = self.accel_raw - 1.0
+    # else:
+    #     # Set accel_raw directly to the current value if the difference is within acceptable range
+    #     self.accel_raw = current_accel_raw
 
     # Calculate accel_diff for jerk calculation
     if actuators.longControlState == LongCtrlState.off:
@@ -533,7 +546,7 @@ class CarController(CarControllerBase):
     self.jerk = self.jerk * 0.9 + accel_diff * 0.1
 
     # Update accel_last_jerk for future calculations
-    self.accel_last_jerk = self.accel_raw
+    #self.accel_last_jerk = self.accel_raw
 
     return self.jerk
 
