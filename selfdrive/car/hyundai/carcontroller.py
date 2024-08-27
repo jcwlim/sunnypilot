@@ -486,20 +486,57 @@ class CarController(CarControllerBase):
     return cruise_button
 
   # jerk calculations thanks to apilot!
-  def cal_jerk(self, accel, actuators):
-    self.accel_raw = max(accel, -1.5)
-    #self.accel_raw = accel
-    if actuators.longControlState == LongCtrlState.off:
-      accel_diff = 0.0
-    elif actuators.longControlState == LongCtrlState.stopping:# or hud_control.softHold > 0:
-      accel_diff = 0.0
-    else:
-      accel_diff = self.accel_raw - self.accel_last_jerk
+  # def cal_jerk(self, accel, actuators):
+  #   self.accel_raw = max(accel, -1.5)
+  #   #self.accel_raw = accel
+  #   if actuators.longControlState == LongCtrlState.off:
+  #     accel_diff = 0.0
+  #   elif actuators.longControlState == LongCtrlState.stopping:# or hud_control.softHold > 0:
+  #     accel_diff = 0.0
+  #   else:
+  #     accel_diff = self.accel_raw - self.accel_last_jerk
 
-    #accel_diff = max(accel_diff, -1.0)
+  #   #accel_diff = max(accel_diff, -1.0)
+  #   accel_diff /= DT_CTRL
+  #   self.jerk = self.jerk * 0.9 + accel_diff * 0.1
+  #   return self.jerk
+  
+  def cal_jerk(self, accel, actuators):
+    # Clamp accel to a minimum of -1.5
+    current_accel_raw = accel
+
+    # Initialize previous accel if not already done
+    if not hasattr(self, 'accel_raw'):
+        self.accel_raw = current_accel_raw
+
+    # Calculate the difference between the current and previous accel values
+    accel_diff = current_accel_raw - self.accel_raw
+
+    # If the difference is more than -3, gradually adjust the accel_raw value
+    if accel_diff < -3:
+        # Gradually decrease accel_raw by 1.5 steps per frame
+        self.accel_raw = self.accel_raw - 1.5
+    else:
+        # Set accel_raw directly to the current value if the difference is within acceptable range
+        self.accel_raw = current_accel_raw
+
+    # Calculate accel_diff for jerk calculation
+    if actuators.longControlState == LongCtrlState.off:
+        accel_diff = 0.0
+    elif actuators.longControlState == LongCtrlState.stopping:
+        accel_diff = 0.0
+    else:
+        accel_diff = self.accel_raw - self.accel_last_jerk
+
+    # Divide by control timestep and apply low-pass filter for jerk calculation
     accel_diff /= DT_CTRL
     self.jerk = self.jerk * 0.9 + accel_diff * 0.1
+
+    # Update accel_last_jerk for future calculations
+    self.accel_last_jerk = self.accel_raw
+
     return self.jerk
+
 
   def make_jerk(self, CS, accel, actuators):
     jerk = self.cal_jerk(accel, actuators)
