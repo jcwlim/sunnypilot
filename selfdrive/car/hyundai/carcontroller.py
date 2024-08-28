@@ -504,7 +504,7 @@ class CarController(CarControllerBase):
   def cal_jerk(self, accel, actuators):
 
     thresholds = [3.0, 2.5, 2.0]  # Adjust thresholds as needed
-    step_sizes = [1.5, 1.0, 1.5]  # Corresponding step sizes
+    step_sizes = [1.5, 2.0, 2.0]  # Corresponding step sizes
 
 
     # Clamp accel to a minimum of -1.5
