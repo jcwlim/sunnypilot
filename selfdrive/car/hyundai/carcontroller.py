@@ -309,7 +309,7 @@ class CarController(CarControllerBase):
         can_sends.extend(hyundaican.create_acc_commands(self.packer, CC.enabled and CS.out.cruiseState.enabled, self.accel_raw, self.accel_val, self.jerk_l, self.jerk_u, int(self.frame / 2),
                                                         hud_control, set_speed_in_units, stopping,
                                                         CC.cruiseControl.override, use_fca, CS, escc, self.CP, self.lead_distance, self.cb_lower, self.cb_upper))
-
+      
       # 20 Hz LFA MFA message
       if self.frame % 5 == 0 and self.CP.flags & HyundaiFlags.SEND_LFA.value:
         can_sends.append(hyundaican.create_lfahda_mfc(self.packer, CC.enabled, CC.latActive, lateral_paused, blinking_icon))
@@ -530,13 +530,14 @@ class CarController(CarControllerBase):
     #     # Set accel_raw directly to the current value if the difference is within acceptable range
     #     self.accel_raw = current_accel_raw
 
+    self.accel_raw = accel
     # Calculate accel_diff for jerk calculation
     if actuators.longControlState == LongCtrlState.off:
         accel_diff = 0.0
     elif actuators.longControlState == LongCtrlState.stopping:
         accel_diff = 0.0
     else:
-        accel_diff = self.accel_raw - self.accel_last_jerk
+        accel_diff = self.accel_raw - self.accel_last
 
     # Divide by control timestep and apply low-pass filter for jerk calculation
     accel_diff /= DT_CTRL
@@ -567,7 +568,7 @@ class CarController(CarControllerBase):
         self.jerk_count = 0
       else:
         self.jerk_u = min(max(0.5, jerk * 2.0), jerk_max)
-        self.jerk_l = min(max(1.0, -jerk * 3.0), jerkLimit)
+        self.jerk_l = min(max(0.5, -jerk * 2.0), jerkLimit)
     else:
       startingJerk = self.jerkStartLimit
       jerkLimit = 5.0
