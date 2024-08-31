@@ -106,8 +106,8 @@ class RadarInterface(RadarInterfaceBase):
             self.prev_lat_pos = current_lat_pos
 
           delta_lat_pos = current_lat_pos - self.prev_lat_pos
-          if current_lat_pos < -13:
-            current_lat_pos = -8
+          if current_lat_pos < -11:
+            current_lat_pos = -7
 
           self.prev_lat_pos = current_lat_pos
 
