@@ -80,7 +80,7 @@ def get_T_FOLLOW(personality=custom.LongitudinalPersonalitySP.standard):
   elif personality==custom.LongitudinalPersonalitySP.moderate:
     return 1.25
   elif personality==custom.LongitudinalPersonalitySP.aggressive:
-    return 1.0
+    return 0.65 #1.0
   elif personality==custom.LongitudinalPersonalitySP.overtake:
     return 0.25
   else:
