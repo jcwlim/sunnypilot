@@ -89,8 +89,10 @@ class RadarInterface(RadarInterfaceBase):
       msg = self.rcp.vl[msg_src]
       valid = msg['ACC_ObjDist'] < 204.6 if self.CP.carFingerprint in CANFD_CAR else \
               msg['ACC_ObjStatus']
+      okgo = True if -msg['ACC_ObjLatPos'] > -8 else False
+
       for ii in range(1):
-        if valid:
+        if valid and okgo:
           if ii not in self.pts:
             self.pts[ii] = car.RadarData.RadarPoint.new_message()
             self.pts[ii].trackId = self.track_id
