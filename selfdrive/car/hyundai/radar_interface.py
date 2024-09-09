@@ -102,6 +102,7 @@ class RadarInterface(RadarInterfaceBase):
           self.counter += 1
           if self.counter > 100:
             self.previous = msg['ACC_ObjRelSpd']
+            self.counter = 0
 
       for ii in range(1):
         if valid and okgo:
