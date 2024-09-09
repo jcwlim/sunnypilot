@@ -44,6 +44,7 @@ class RadarInterface(RadarInterfaceBase):
                        0x420 if self.camera_scc else \
                        (RADAR_START_ADDR + RADAR_MSG_COUNT - 1)
     self.track_id = 0
+    self.previous = 0
 
     self.radar_off_can = CP.radarUnavailable
     self.rcp = get_radar_can_parser(CP)
@@ -90,7 +91,14 @@ class RadarInterface(RadarInterfaceBase):
       valid = msg['ACC_ObjDist'] < 204.6 if self.CP.carFingerprint in CANFD_CAR else \
               msg['ACC_ObjStatus']
       okgo = True #False #True if -msg['ACC_ObjLatPos'] > -8 else False
-      valid = msg['ACC_ObjDist'] < 9
+      #valid = msg['ACC_ObjDist'] < 9
+      
+      if valid:
+        if self.previous = 0:
+          self.previous = msg['ACC_ObjRelSpd']
+        else if self.previous - msg['ACC_ObjRelSpd'] < -5 or self.previous - msg['ACC_ObjRelSpd'] < 30:
+          valid = False
+          self.previous = msg['ACC_ObjRelSpd']
 
       for ii in range(1):
         if valid and okgo:
@@ -104,6 +112,7 @@ class RadarInterface(RadarInterfaceBase):
           self.pts[ii].vRel = msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = float('nan')
           self.pts[ii].yvRel = float('nan')
+          self.previous = msg['ACC_ObjRelSpd']
 
         else:
           if ii in self.pts:
