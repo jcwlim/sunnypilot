@@ -97,7 +97,7 @@ class RadarInterface(RadarInterfaceBase):
       if valid:
         if self.previous == 0:
           self.previous = msg['ACC_ObjRelSpd']
-        else if (self.previous - msg['ACC_ObjRelSpd']) < -5 or (self.previous - msg['ACC_ObjRelSpd']) > 10:
+        elif (self.previous - msg['ACC_ObjRelSpd']) < -5 or (self.previous - msg['ACC_ObjRelSpd']) > 10:
           valid = False
           self.counter += 1
           if self.counter > 100:
