@@ -45,6 +45,7 @@ class RadarInterface(RadarInterfaceBase):
                        (RADAR_START_ADDR + RADAR_MSG_COUNT - 1)
     self.track_id = 0
     self.previous = 0
+    self.counter = 0
 
     self.radar_off_can = CP.radarUnavailable
     self.rcp = get_radar_can_parser(CP)
@@ -98,7 +99,9 @@ class RadarInterface(RadarInterfaceBase):
           self.previous = msg['ACC_ObjRelSpd']
         else if self.previous - msg['ACC_ObjRelSpd'] < -5 or self.previous - msg['ACC_ObjRelSpd'] > 10:
           valid = False
-          #self.previous = msg['ACC_ObjRelSpd']
+          self.counter += 1
+          if self.counter > 100:
+            self.previous = msg['ACC_ObjRelSpd']
 
       for ii in range(1):
         if valid and okgo:
