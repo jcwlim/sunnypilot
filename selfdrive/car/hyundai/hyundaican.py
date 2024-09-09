@@ -143,7 +143,7 @@ def create_acc_commands(packer, enabled, accel_raw, accel_val, lower_jerk, upper
     "ACC_ObjStatus": 1, # close lead makes controls tighter
     "ACC_ObjLatPos": 0,
     "ACC_ObjRelSpd": 0,
-    "ACC_ObjDist": 0, #1, # close lead makes controls tighter
+    "ACC_ObjDist": 1, # close lead makes controls tighter
     }
   commands.append(packer.make_can_msg("SCC11", 0, scc11_values))
 
