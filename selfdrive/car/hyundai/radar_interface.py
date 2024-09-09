@@ -89,7 +89,7 @@ class RadarInterface(RadarInterfaceBase):
       msg = self.rcp.vl[msg_src]
       valid = msg['ACC_ObjDist'] < 204.6 if self.CP.carFingerprint in CANFD_CAR else \
               msg['ACC_ObjStatus']
-      okgo = False #True if -msg['ACC_ObjLatPos'] > -8 else False
+      okgo = True #False #True if -msg['ACC_ObjLatPos'] > -8 else False
 
       for ii in range(1):
         if valid and okgo:
@@ -99,8 +99,8 @@ class RadarInterface(RadarInterfaceBase):
             self.track_id += 1
           self.pts[ii].measured = True
           self.pts[ii].dRel = msg['ACC_ObjDist']
-          self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan')
-          self.pts[ii].vRel = msg['ACC_ObjRelSpd']
+          self.pts[ii].yRel = 0 #-msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan')
+          self.pts[ii].vRel = 0 #msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = float('nan')
           self.pts[ii].yvRel = float('nan')
 
