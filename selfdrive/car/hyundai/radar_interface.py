@@ -105,6 +105,19 @@ class RadarInterface(RadarInterfaceBase):
       #       self.counter = 0
             
       valid = msg['ACC_ObjDist'] < 9
+      if msg['ACC_ObjStatus'] and (10 < msg['ACC_ObjDist'] < 25):
+          valid = True
+      else:
+          valid = False
+
+      # self.counter += 1
+      # if self.counter % 5 == 0:
+      #   valid = True
+      # else:
+      #   valid = False
+
+      # if self.counter >= 50:  # After 50 iterations (1 second)
+      #   self.counter = 0
 
       for ii in range(1):
         if valid and okgo:
