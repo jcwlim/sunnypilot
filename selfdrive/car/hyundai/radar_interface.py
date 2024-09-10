@@ -94,15 +94,15 @@ class RadarInterface(RadarInterfaceBase):
       okgo = True #False #True if -msg['ACC_ObjLatPos'] > -8 else False
       
       
-      if valid:
-        if self.previous == 0:
-          self.previous = msg['ACC_ObjRelSpd']
-        elif (self.previous - msg['ACC_ObjRelSpd']) < -5 or (self.previous - msg['ACC_ObjRelSpd']) > 10:
-          valid = False
-          self.counter += 1
-          if self.counter > 100:
-            self.previous = msg['ACC_ObjRelSpd']
-            self.counter = 0
+      # if valid:
+      #   if self.previous == 0:
+      #     self.previous = msg['ACC_ObjRelSpd']
+      #   elif (self.previous - msg['ACC_ObjRelSpd']) < -5 or (self.previous - msg['ACC_ObjRelSpd']) > 10:
+      #     valid = False
+      #     self.counter += 1
+      #     if self.counter > 100:
+      #       self.previous = msg['ACC_ObjRelSpd']
+      #       self.counter = 0
             
       valid = msg['ACC_ObjDist'] < 9
 
@@ -114,11 +114,11 @@ class RadarInterface(RadarInterfaceBase):
             self.track_id += 1
           self.pts[ii].measured = True
           self.pts[ii].dRel = msg['ACC_ObjDist']
-          self.pts[ii].yRel = max(-8, -msg['ACC_ObjLatPos']) #if self.enhanced_scc else float('nan')
+          self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan') #max(-8, -msg['ACC_ObjLatPos']) #if self.enhanced_scc else float('nan')
           self.pts[ii].vRel = msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = float('nan')
           self.pts[ii].yvRel = float('nan')
-          self.previous = msg['ACC_ObjRelSpd']
+          # self.previous = msg['ACC_ObjRelSpd']
 
         else:
           if ii in self.pts:

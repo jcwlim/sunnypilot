@@ -99,7 +99,7 @@ def get_dynamic_personality(v_ego, personality=custom.LongitudinalPersonalitySP.
     y_dist = [1.45, 1.45,  1.40]
   elif personality==custom.LongitudinalPersonalitySP.aggressive:
     x_vel =  [0,   1., 2., 3., 4., 5., 10., 11.0, 20.0, 20.01, 27.69, 27.7, 50.0]
-    y_dist = [-0.2, -0.15, -0.1, -0.08, -0.05, -0.02, 0., 0.2, 0.3, 1.05,  1.12,  1.20, 1.30]
+    y_dist = [-0.1, -0.05, 0.1, 0.15, 0.2, 0.3, 0.9, 1.0, 1.03, 1.05,  1.12,  1.20, 1.30]
   else:
     raise NotImplementedError("Dynamic personality not supported")
   return np.interp(v_ego, x_vel, y_dist)
@@ -210,8 +210,8 @@ def gen_long_ocp():
 
   x0 = np.zeros(X_DIM)
   ocp.constraints.x0 = x0
-  #ocp.parameter_values = np.array([-1.2, 1.2, 0.0, 0.0, get_T_FOLLOW(), LEAD_DANGER_FACTOR])
-  ocp.parameter_values = np.array([-1.2, 1.2, 0.0, 0.0, lead_t_follow, LEAD_DANGER_FACTOR])
+  ocp.parameter_values = np.array([-1.2, 1.2, 0.0, 0.0, get_T_FOLLOW(), LEAD_DANGER_FACTOR])
+  # ocp.parameter_values = np.array([-1.2, 1.2, 0.0, 0.0, lead_t_follow, LEAD_DANGER_FACTOR])
 
 
   # We put all constraint cost weights to 0 and only set them at runtime
