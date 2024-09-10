@@ -104,7 +104,7 @@ class RadarInterface(RadarInterfaceBase):
             self.previous = msg['ACC_ObjRelSpd']
             self.counter = 0
             
-      #valid = msg['ACC_ObjDist'] < 9
+      valid = msg['ACC_ObjDist'] < 9
 
       for ii in range(1):
         if valid and okgo:
