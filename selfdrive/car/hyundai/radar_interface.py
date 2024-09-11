@@ -118,7 +118,7 @@ class RadarInterface(RadarInterfaceBase):
 
       dRel = msg['ACC_ObjDist']
       vRel = msg['ACC_ObjRelSpd']
-      valid = msg['ACC_ObjStatus'] and 25 < dRel < 150
+      valid = msg['ACC_ObjStatus'] and 18 < dRel < 150
       # self.counter += 1
       # if self.counter % 5 == 0:
       #   valid = True
