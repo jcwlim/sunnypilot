@@ -5,6 +5,7 @@ from opendbc.can.parser import CANParser
 from openpilot.selfdrive.car.interfaces import RadarInterfaceBase
 from openpilot.selfdrive.car.hyundai.hyundaicanfd import CanBus
 from openpilot.selfdrive.car.hyundai.values import DBC, HyundaiFlagsSP, CANFD_CAR
+from openpilot.common.filter_simple import StreamingMovingAverage
 
 RADAR_START_ADDR = 0x500
 RADAR_MSG_COUNT = 32
@@ -46,6 +47,8 @@ class RadarInterface(RadarInterfaceBase):
     self.track_id = 0
     self.previous = 0
     self.counter = 0
+    self.dRelFilter = StreamingMovingAverage(2)
+    self.vRelFilter = StreamingMovingAverage(4)
 
     self.radar_off_can = CP.radarUnavailable
     self.rcp = get_radar_can_parser(CP)
@@ -112,6 +115,10 @@ class RadarInterface(RadarInterfaceBase):
       else:
           valid = False
 
+
+      dRel = msg['ACC_ObjDist']
+      vRel = msg['ACC_ObjRelSpd']
+      valid = msg['ACC_ObjStatus'] and dRel < 150
       # self.counter += 1
       # if self.counter % 5 == 0:
       #   valid = True
@@ -125,12 +132,17 @@ class RadarInterface(RadarInterfaceBase):
         if valid and okgo:
           if ii not in self.pts:
             self.pts[ii] = car.RadarData.RadarPoint.new_message()
-            self.pts[ii].trackId = self.track_id
-            self.track_id += 1
+            self.pts[ii].trackId = 0 #self.track_id
+            #self.track_id += 1
+            dRel = self.dRelFilter.set(dRel)
+            vRel = self.vRelFilter.set(vRel)
+          else:
+            dRel = self.dRelFilter.process(dRel)
+            vRel = self.vRelFilter.process(vRel)
           self.pts[ii].measured = True
-          self.pts[ii].dRel = msg['ACC_ObjDist']
+          self.pts[ii].dRel = dRel #msg['ACC_ObjDist']
           self.pts[ii].yRel = -msg['ACC_ObjLatPos'] if self.enhanced_scc else float('nan') #max(-8, -msg['ACC_ObjLatPos']) #if self.enhanced_scc else float('nan')
-          self.pts[ii].vRel = msg['ACC_ObjRelSpd']
+          self.pts[ii].vRel = vRel #msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = float('nan')
           self.pts[ii].yvRel = float('nan')
           # self.previous = msg['ACC_ObjRelSpd']
