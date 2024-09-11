@@ -47,7 +47,7 @@ class RadarInterface(RadarInterfaceBase):
     self.track_id = 0
     self.previous = 0
     self.counter = 0
-    self.dRelFilter = StreamingMovingAverage(2)
+    self.dRelFilter = StreamingMovingAverage(5)
     self.vRelFilter = StreamingMovingAverage(10)
 
     self.radar_off_can = CP.radarUnavailable
@@ -118,7 +118,7 @@ class RadarInterface(RadarInterfaceBase):
 
       dRel = msg['ACC_ObjDist']
       vRel = msg['ACC_ObjRelSpd']
-      valid = msg['ACC_ObjStatus'] and dRel < 150 #18 < dRel < 150
+      valid = msg['ACC_ObjStatus'] and 13 < dRel < 150 #18 < dRel < 150
       # self.counter += 1
       # if self.counter % 5 == 0:
       #   valid = True
