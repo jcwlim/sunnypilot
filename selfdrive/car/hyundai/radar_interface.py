@@ -48,7 +48,7 @@ class RadarInterface(RadarInterfaceBase):
     self.previous = 0
     self.counter = 0
     self.dRelFilter = StreamingMovingAverage(20)
-    self.vRelFilter = StreamingMovingAverage(40)
+    self.vRelFilter = StreamingMovingAverage(10)
 
     self.radar_off_can = CP.radarUnavailable
     self.rcp = get_radar_can_parser(CP)
