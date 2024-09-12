@@ -48,7 +48,7 @@ class RadarInterface(RadarInterfaceBase):
     self.previous = 0
     self.counter = 0
     self.dRelFilter = StreamingMovingAverage(2)
-    self.vRelFilter = StreamingMovingAverage(10)
+    self.vRelFilter = StreamingMovingAverage(4)
 
     self.radar_off_can = CP.radarUnavailable
     self.rcp = get_radar_can_parser(CP)
@@ -137,11 +137,11 @@ class RadarInterface(RadarInterfaceBase):
             dRel = self.dRelFilter.set(dRel)
             vRel = self.vRelFilter.set(vRel)
           else:
-            dRel = self.dRelFilter.process(dRel)
-            vRel = self.vRelFilter.process(vRel)
+            dRel = self.dRelFilter.process(dRel, True)
+            vRel = self.vRelFilter.process(vRel, True)
           self.pts[ii].measured = True
           self.pts[ii].dRel = dRel #msg['ACC_ObjDist']
-          self.pts[ii].yRel = max(-8, -msg['ACC_ObjLatPos']) #if self.enhanced_scc else float('nan')
+          self.pts[ii].yRel = max(-12, -msg['ACC_ObjLatPos']) #if self.enhanced_scc else float('nan')
           self.pts[ii].vRel = vRel #msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = float('nan')
           self.pts[ii].yvRel = float('nan')
