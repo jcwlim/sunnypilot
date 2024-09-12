@@ -47,8 +47,8 @@ class RadarInterface(RadarInterfaceBase):
     self.track_id = 0
     self.previous = 0
     self.counter = 0
-    self.dRelFilter = StreamingMovingAverage(20)
-    self.vRelFilter = StreamingMovingAverage(10)
+    self.dRelFilter = StreamingMovingAverage(2)
+    self.vRelFilter = StreamingMovingAverage(50)
 
     self.radar_off_can = CP.radarUnavailable
     self.rcp = get_radar_can_parser(CP)
@@ -118,7 +118,7 @@ class RadarInterface(RadarInterfaceBase):
 
       dRel = msg['ACC_ObjDist']
       vRel = msg['ACC_ObjRelSpd']
-      valid = msg['ACC_ObjStatus'] and 13 < dRel < 150 #18 < dRel < 150
+      valid = msg['ACC_ObjStatus'] and ((30 < dRel < 150) or (15 < dRel and 50 < vRel)) #18 < dRel < 150
       # self.counter += 1
       # if self.counter % 5 == 0:
       #   valid = True
@@ -137,11 +137,11 @@ class RadarInterface(RadarInterfaceBase):
             dRel = self.dRelFilter.set(dRel)
             vRel = self.vRelFilter.set(vRel)
           else:
-            dRel = self.dRelFilter.process(dRel, True)
-            vRel = self.vRelFilter.process(vRel, True)
+            dRel = self.dRelFilter.process(dRel)
+            vRel = self.vRelFilter.process(vRel)
           self.pts[ii].measured = True
           self.pts[ii].dRel = dRel #msg['ACC_ObjDist']
-          self.pts[ii].yRel = max(-12, -msg['ACC_ObjLatPos']) #if self.enhanced_scc else float('nan')
+          self.pts[ii].yRel = max(-7, -msg['ACC_ObjLatPos']) #if self.enhanced_scc else float('nan')
           self.pts[ii].vRel = vRel #msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = float('nan')
           self.pts[ii].yvRel = float('nan')
