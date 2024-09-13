@@ -5,7 +5,7 @@ from opendbc.can.parser import CANParser
 from openpilot.selfdrive.car.interfaces import RadarInterfaceBase
 from openpilot.selfdrive.car.hyundai.hyundaicanfd import CanBus
 from openpilot.selfdrive.car.hyundai.values import DBC, HyundaiFlagsSP, CANFD_CAR
-from openpilot.common.filter_simple import StreamingMovingAverage
+from openpilot.common.filter_simple import StreamingMovingAverage, SpecialRangeFilter
 
 RADAR_START_ADDR = 0x500
 RADAR_MSG_COUNT = 32
@@ -49,6 +49,7 @@ class RadarInterface(RadarInterfaceBase):
     self.counter = 0
     self.dRelFilter = StreamingMovingAverage(2)
     self.vRelFilter = StreamingMovingAverage(4)
+    self.rangeFilter = SpecialRangeFilter(3, True)
 
     self.radar_off_can = CP.radarUnavailable
     self.rcp = get_radar_can_parser(CP)
@@ -120,26 +121,7 @@ class RadarInterface(RadarInterfaceBase):
       vRel = msg['ACC_ObjRelSpd']
       #valid = msg['ACC_ObjStatus'] and ((80 < dRel < 150) or (dRel < 40 and (50 < vRel or vRel < 15))) #18 < dRel < 150
       valid = msg['ACC_ObjStatus'] and dRel < 150
-      if 3 < dRel < 6:
-        valid = False
-      if 9 < dRel < 13:
-        valid = False
-      if 18 < dRel < 22:
-        valid = False
-      if 27 < dRel < 32:
-        valid = False
-      if 37 < dRel < 42:
-        valid = False
-      if 47 < dRel < 52:
-        valid = False
-      if 57 < dRel < 62:
-        valid = False
-      if 67 < dRel < 72:
-        valid = False
-      if 77 < dRel < 82:
-        valid = False
-      if 87 < dRel < 92:
-        valid = False
+      valid = self.rangeFilter.update(msg['ACC_ObjStatus'], dRel)
       # self.counter += 1
       # if self.counter % 5 == 0:
       #   valid = True
@@ -162,7 +144,7 @@ class RadarInterface(RadarInterfaceBase):
             vRel = self.vRelFilter.process(vRel)
           self.pts[ii].measured = True
           self.pts[ii].dRel = dRel #msg['ACC_ObjDist']
-          self.pts[ii].yRel = max(-7, -msg['ACC_ObjLatPos']) #if self.enhanced_scc else float('nan')
+          self.pts[ii].yRel = max(-9, -msg['ACC_ObjLatPos']) #if self.enhanced_scc else float('nan')
           self.pts[ii].vRel = vRel #msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = float('nan')
           self.pts[ii].yvRel = float('nan')
