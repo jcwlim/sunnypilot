@@ -135,13 +135,13 @@ class RadarInterface(RadarInterfaceBase):
         if valid and okgo:
           if ii not in self.pts:
             self.pts[ii] = car.RadarData.RadarPoint.new_message()
-            self.pts[ii].trackId = 0 #self.track_id
-            #self.track_id += 1
-            dRel = self.dRelFilter.set(dRel)
-            vRel = self.vRelFilter.set(vRel)
+            self.pts[ii].trackId = self.track_id
+            self.track_id += 1
+            #dRel = self.dRelFilter.set(dRel)
+            #vRel = self.vRelFilter.set(vRel)
           else:
-            dRel = self.dRelFilter.process(dRel)
-            vRel = self.vRelFilter.process(vRel)
+            #dRel = self.dRelFilter.process(dRel)
+            #vRel = self.vRelFilter.process(vRel)
           self.pts[ii].measured = True
           self.pts[ii].dRel = dRel #msg['ACC_ObjDist']
           self.pts[ii].yRel = max(-5, -msg['ACC_ObjLatPos']) #if self.enhanced_scc else float('nan')
