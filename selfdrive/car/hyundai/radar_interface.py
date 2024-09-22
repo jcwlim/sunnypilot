@@ -139,7 +139,7 @@ class RadarInterface(RadarInterfaceBase):
             self.track_id += 1
             #dRel = self.dRelFilter.set(dRel)
             #vRel = self.vRelFilter.set(vRel)
-          else:
+          #else:
             #dRel = self.dRelFilter.process(dRel)
             #vRel = self.vRelFilter.process(vRel)
           self.pts[ii].measured = True
