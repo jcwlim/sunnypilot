@@ -135,8 +135,8 @@ class RadarInterface(RadarInterfaceBase):
         if valid and okgo:
           if ii not in self.pts:
             self.pts[ii] = car.RadarData.RadarPoint.new_message()
-            self.pts[ii].trackId = self.track_id
-            self.track_id += 1
+            self.pts[ii].trackId = 0 #self.track_id
+            #self.track_id += 1
             #dRel = self.dRelFilter.set(dRel)
             #vRel = self.vRelFilter.set(vRel)
           #else:
