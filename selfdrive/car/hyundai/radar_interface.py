@@ -112,9 +112,9 @@ class RadarInterface(RadarInterfaceBase):
             vRel = self.vRelFilter.process(vRel)
           self.pts[ii].measured = True
           self.pts[ii].dRel = dRel #msg['ACC_ObjDist']
-          self.pts[ii].yRel = max(-5, -msg['ACC_ObjLatPos']) if self.enhanced_scc else float('nan')
+          self.pts[ii].yRel = max(-3, -msg['ACC_ObjLatPos']) if self.enhanced_scc else float('nan')
           self.pts[ii].vRel = vRel #msg['ACC_ObjRelSpd']
-          self.pts[ii].aRel = float('nan')
+          self.pts[ii].aRel = 0 #float('nan')
           self.pts[ii].yvRel = float('nan')
 
         else:
