@@ -45,7 +45,7 @@ ee = 0.00669342162296594323
 class OtisServ(BaseHTTPRequestHandler):
   def do_GET(self):
     use_amap = params.get_bool("EnableAmap")
-    use_gmap = not use_amap and params.get_bool("EnableGmap")
+    use_gmap = True # not use_amap and params.get_bool("EnableGmap")
 
     if self.path == '/logo.png':
       self.get_logo()
@@ -118,7 +118,7 @@ class OtisServ(BaseHTTPRequestHandler):
 
   def do_POST(self):
     use_amap = params.get_bool("EnableAmap")
-    use_gmap = not use_amap and params.get_bool("EnableGmap")
+    use_gmap = True #not use_amap and params.get_bool("EnableGmap")
 
     postvars = self.parse_POST()
     # set_destination endpoint
