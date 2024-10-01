@@ -97,7 +97,7 @@ class RadarInterface(RadarInterfaceBase):
 
       dRel = msg['ACC_ObjDist']
       vRel = msg['ACC_ObjRelSpd']
-      #valid = self.rangeFilter.update(msg['ACC_ObjStatus'], dRel)
+      valid = self.rangeFilter.update(msg['ACC_ObjStatus'], dRel)
 
       for ii in range(1):
         if valid:
@@ -111,7 +111,7 @@ class RadarInterface(RadarInterfaceBase):
             Rel = self.dRelFilter.process(dRel)
             vRel = self.vRelFilter.process(vRel)
           self.pts[ii].measured = True
-          self.pts[ii].dRel = (dRel + 1.5) #if dRel <= 11 else dRel #msg['ACC_ObjDist']
+          self.pts[ii].dRel = (dRel + 1.5) if dRel <= 11 else dRel #msg['ACC_ObjDist']
           self.pts[ii].yRel = max(-3, -msg['ACC_ObjLatPos']) if self.enhanced_scc else float('nan')
           self.pts[ii].vRel = vRel #msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = 0 #float('nan')
