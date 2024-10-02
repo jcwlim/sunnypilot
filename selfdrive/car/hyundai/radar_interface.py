@@ -46,7 +46,7 @@ class RadarInterface(RadarInterfaceBase):
                        (RADAR_START_ADDR + RADAR_MSG_COUNT - 1)
     self.track_id = 0
     self.dRelFilter = StreamingMovingAverage(2)
-    self.vRelFilter = StreamingMovingAverage(30)
+    self.vRelFilter = StreamingMovingAverage(4)
     self.rangeFilter = SpecialRangeFilter(160, False)
 
     self.radar_off_can = CP.radarUnavailable
