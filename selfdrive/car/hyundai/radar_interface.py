@@ -45,9 +45,9 @@ class RadarInterface(RadarInterfaceBase):
                        0x420 if self.camera_scc else \
                        (RADAR_START_ADDR + RADAR_MSG_COUNT - 1)
     self.track_id = 0
-    self.dRelFilter = StreamingMovingAverage(1)
-    self.vRelFilter = StreamingMovingAverage(1)
-    self.rangeFilter = SpecialRangeFilter(0.5, True)
+    self.dRelFilter = StreamingMovingAverage(2)
+    self.vRelFilter = StreamingMovingAverage(30)
+    self.rangeFilter = SpecialRangeFilter(160, False)
 
     self.radar_off_can = CP.radarUnavailable
     self.rcp = get_radar_can_parser(CP)
@@ -98,6 +98,7 @@ class RadarInterface(RadarInterfaceBase):
       dRel = msg['ACC_ObjDist']
       vRel = msg['ACC_ObjRelSpd']
       valid = self.rangeFilter.update(msg['ACC_ObjStatus'], dRel)
+      self.rangeFilter.setdRel(dRel)
 
       for ii in range(1):
         if valid:
@@ -108,10 +109,10 @@ class RadarInterface(RadarInterfaceBase):
             dRel = self.dRelFilter.set(dRel)
             vRel = self.vRelFilter.set(vRel)
           else:
-            Rel = self.dRelFilter.process(dRel)
+            dRel = self.dRelFilter.process(dRel)
             vRel = self.vRelFilter.process(vRel)
           self.pts[ii].measured = True
-          self.pts[ii].dRel = (dRel + 1.5) if dRel <= 6 else dRel #msg['ACC_ObjDist']
+          self.pts[ii].dRel = dRel #(dRel + 1.5) if dRel <= 6 else dRel #msg['ACC_ObjDist']
           self.pts[ii].yRel = max(-3, -msg['ACC_ObjLatPos']) if self.enhanced_scc else float('nan')
           self.pts[ii].vRel = vRel #msg['ACC_ObjRelSpd']
           self.pts[ii].aRel = 0 #float('nan')
