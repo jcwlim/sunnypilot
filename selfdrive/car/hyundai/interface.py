@@ -110,7 +110,7 @@ class CarInterface(CarInterfaceBase):
 
     if ret.flags & (HyundaiFlags.HYBRID | HyundaiFlags.EV):
       ret.startingState = False
-      ret.stoppingDecelRate = 1.2
+      ret.stoppingDecelRate = 0.4
       ret.stopAccel = 0.
     else:
       ret.startingState = True
