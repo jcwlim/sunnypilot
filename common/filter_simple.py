@@ -106,4 +106,4 @@ class RecordHistory:
         percentage_increase = ((latest_record - average_of_previous_records) / average_of_previous_records) * 100
 
         # Return True if the latest record is more than 5% higher than the average of previous records
-        return percentage_increase < 10
+        return percentage_increase < 2
