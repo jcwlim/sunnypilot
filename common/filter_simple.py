@@ -50,17 +50,22 @@ class SpecialRangeFilter:
         self.skip_range = skip_range  
         self.invert_logic = invert_logic
         self.valid = False
+        history = RecordHistory()
         self.previous = 150
+        
 
     def setdRel(self, dRel):
        self.previous = dRel
 
     def update(self, status, dRel):
         # Calculate the position in the current skip cycle
-        if status and dRel < 150 and (dRel < self.previous or dRel < 11):
+        if status and dRel < 150 and dRel > 10: #(dRel < self.previous or dRel < 11):
+          
+          history.add_record(dRel)
+          result = history.check_average_increase()
           #if dRel <= 14:
              #return False
-          if dRel < self.skip_range:
+          if dRel < self.skip_range and result:
              return False if self.invert_logic else True
           
           mod_value = dRel % (2 * self.skip_range)
@@ -71,3 +76,34 @@ class SpecialRangeFilter:
 
           return self.valid
         return False
+        
+class RecordHistory:
+    def __init__(self, max_records=100):
+        self.max_records = max_records
+        self.records = []
+
+    def add_record(self, value):
+        """Add a new record and maintain a history of max_records."""
+        if len(self.records) == self.max_records:
+            self.records.pop(0)  # Remove the oldest record if we reach max capacity
+        self.records.append(value)
+
+    def check_average_increase(self):
+        """Check if the latest record is more than 5% higher than the average of all previous records."""
+        if len(self.records) < 2:
+            return False  # Need at least two records to compare
+
+        # Calculate the average of all previous records except the latest
+        average_of_previous_records = sum(self.records[:-1]) / len(self.records[:-1])
+
+        # Get the latest record
+        latest_record = self.records[-1]
+
+        # Calculate percentage increase from the average to the latest record
+        if average_of_previous_records == 0:
+            return False  # Avoid division by zero
+
+        percentage_increase = ((latest_record - average_of_previous_records) / average_of_previous_records) * 100
+
+        # Return True if the latest record is more than 5% higher than the average of previous records
+        return percentage_increase < 5
