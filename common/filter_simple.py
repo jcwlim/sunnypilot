@@ -65,7 +65,7 @@ class SpecialRangeFilter:
           result = history.check_average_increase()
           #if dRel <= 14:
              #return False
-          if dRel < self.skip_range and result:
+          if dRel < self.skip_range or dRel < self.previous or result:
              return False if self.invert_logic else True
           
           mod_value = dRel % (2 * self.skip_range)
@@ -106,4 +106,4 @@ class RecordHistory:
         percentage_increase = ((latest_record - average_of_previous_records) / average_of_previous_records) * 100
 
         # Return True if the latest record is more than 5% higher than the average of previous records
-        return percentage_increase < 5
+        return percentage_increase < 10
