@@ -50,7 +50,7 @@ class SpecialRangeFilter:
         self.skip_range = skip_range  
         self.invert_logic = invert_logic
         self.valid = False
-        history = RecordHistory()
+        self.history = RecordHistory()
         self.previous = 150
         
 
@@ -61,8 +61,8 @@ class SpecialRangeFilter:
         # Calculate the position in the current skip cycle
         if status and dRel < 150 and dRel > 10: #(dRel < self.previous or dRel < 11):
           
-          history.add_record(dRel)
-          result = history.check_average_increase()
+          self.history.add_record(dRel)
+          result = self.history.check_average_increase()
           #if dRel <= 14:
              #return False
           if dRel < self.skip_range or dRel < self.previous or result:
