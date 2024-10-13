@@ -83,13 +83,13 @@ class RecordHistory:
         self.records = []
 
     def add_record(self, value):
-        """Add a new record and maintain a history of max_records."""
+        #"""Add a new record and maintain a history of max_records."""
         if len(self.records) == self.max_records:
             self.records.pop(0)  # Remove the oldest record if we reach max capacity
         self.records.append(value)
 
     def check_average_increase(self):
-        """Check if the latest record is more than 5% higher than the average of all previous records."""
+        #"""Check if the latest record is more than 5% higher than the average of all previous records."""
         if len(self.records) < 2:
             return False  # Need at least two records to compare
 
