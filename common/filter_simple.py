@@ -59,13 +59,13 @@ class SpecialRangeFilter:
 
     def update(self, status, dRel):
         # Calculate the position in the current skip cycle
-        if status and dRel < 150 and dRel > 10: #(dRel < self.previous or dRel < 11):
+        if status and dRel < 150 and (dRel < self.previous or dRel < 11):
           
           self.history.add_record(dRel)
           result = self.history.check_average_increase()
           #if dRel <= 14:
              #return False
-          if dRel < self.skip_range or dRel < self.previous or result:
+          if dRel < self.skip_range:
              return False if self.invert_logic else True
           
           mod_value = dRel % (2 * self.skip_range)
