@@ -59,7 +59,7 @@ class SpecialRangeFilter:
 
     def update(self, status, dRel):
         # Calculate the position in the current skip cycle
-        if status and dRel < 150 and (dRel < self.previous or dRel < 5):
+        if status and dRel < 150 and (dRel < self.previous or dRel < 7):
           
           self.history.add_record(dRel)
           result = self.history.check_average_increase()
