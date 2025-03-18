@@ -77,6 +77,7 @@ class EsccRadarInterfaceBase:
     self.ESCC = EnhancedSmartCruiseControl(CP, CP_SP)
     self.track_id = 0
     self.use_escc = False
+    self.previous = 160
 
   def update_escc(self, ret):
     for ii in range(1):
@@ -88,7 +89,16 @@ class EsccRadarInterfaceBase:
         self.pts[ii].trackId = self.track_id
         self.track_id += 1
 
-      valid = msg['ACC_ObjStatus']
+      dRel = msg['ACC_ObjDist']
+
+      valid = False
+      if msg['ACC_ObjStatus'] and (dRel <= self.previous):
+        valid = True
+      # if msg['ACC_ObjStatus'] and (dRel <= self.previous or dRel < 7):
+      #   valid = True
+      self.previous = dRel
+
+      #valid = msg['ACC_ObjStatus']
       if valid:
         self.pts[ii].measured = True
         self.pts[ii].dRel = msg['ACC_ObjDist']
