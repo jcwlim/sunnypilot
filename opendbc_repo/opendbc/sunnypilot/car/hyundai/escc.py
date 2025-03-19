@@ -78,6 +78,7 @@ class EsccRadarInterfaceBase:
     self.track_id = 0
     self.use_escc = False
     self.previous = 160
+    self.prev_vRel = 0.0  # Add to store previous vRel
 
   def update_escc(self, ret):
     for ii in range(1):
@@ -89,11 +90,34 @@ class EsccRadarInterfaceBase:
         self.pts[ii].trackId = self.track_id
         self.track_id += 1
 
-      dRel = msg['ACC_ObjDist']
+      dRel = msg['ACC_ObjDist']  # Relative distance to lead car
+      rSpd = msg['ACC_ObjRelSpd']  # Relative speed to lead car (km/h)
 
+      # Fetch vehicle speed from CAN data (CLU15 message)
+      try:
+        vEgo_km = self.rcp.vl['CLU15']['CF_Clu_VehicleSpeed']  # Speed in km/h
+      except KeyError:
+        # Fallback if signal isn’t available
+        vEgo_km = 0.0
+        #print("Warning: CF_Clu_VehicleSpeed not found, assuming 0 km/h")
+
+      # Calculate lead car's absolute speed
+      vLead = vEgo_km + rSpd
+
+      # Validity check
       valid = False
-      if msg['ACC_ObjStatus'] and (dRel <= self.previous):
-        valid = True
+      if msg['ACC_ObjStatus']:
+        if vEgo_km > 45.0 and dRel <= self.previous:  # Lead car moving > 45 km/h
+          valid = True
+        # Optional: Stationary condition (if still desired)
+        # elif abs(vLead) < 1.0:  # Stationary lead car
+        #   valid = True
+
+      # dRel = msg['ACC_ObjDist']
+
+      # valid = False
+      # if msg['ACC_ObjStatus'] and (dRel <= self.previous):
+      #   valid = True
       # if msg['ACC_ObjStatus'] and (dRel <= self.previous or dRel < 7):
       #   valid = True
       self.previous = dRel
@@ -109,6 +133,20 @@ class EsccRadarInterfaceBase:
 
       else:
         del self.pts[ii]
+
+      # if valid:
+      #   self.pts[ii].measured = True
+      #   self.pts[ii].dRel = msg['ACC_ObjDist']
+      #   self.pts[ii].yRel = -msg['ACC_ObjLatPos']
+      #   self.pts[ii].vRel = msg['ACC_ObjRelSpd']  # km/h
+      #   # Calculate aRel
+      #   vRel_mps = self.pts[ii].vRel / 3.6  # Convert km/h to m/s
+      #   aRel = (vRel_mps - self.prev_vRel) #/ 0.02  # 50 Hz = 0.02 s
+      #   self.pts[ii].aRel = aRel  # m/s²
+      #   self.prev_vRel = vRel_mps  # Update previous vRel
+      #   self.pts[ii].yvRel = float('nan')
+      # else:
+      #   del self.pts[ii]
 
     ret.points = list(self.pts.values())
     return ret
