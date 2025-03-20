@@ -107,7 +107,7 @@ class EsccRadarInterfaceBase:
       except KeyError:
         # Fallback if signal isn’t available
         vEgo_km = 0.0
-        print("Warning: CF_Clu_VehicleSpeed not found, assuming 0 km/h")
+        #print("Warning: CF_Clu_VehicleSpeed not found, assuming 0 km/h")
 
       # Calculate lead car's absolute speed
       vLead = vEgo_km + rSpd
@@ -154,6 +154,7 @@ class EsccRadarInterfaceBase:
         self.pts[ii].aRel = aRel  # m/s²
         self.prev_vRel = vRel_mps  # Update previous vRel
         self.pts[ii].yvRel = float('nan')
+        print(aRel)
       else:
         del self.pts[ii]
 
