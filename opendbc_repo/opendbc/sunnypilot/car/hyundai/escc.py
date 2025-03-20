@@ -100,7 +100,7 @@ class EsccRadarInterfaceBase:
       except KeyError:
         # Fallback if signal isn’t available
         vEgo_km = 0.0
-        #print("Warning: CF_Clu_VehicleSpeed not found, assuming 0 km/h")
+        print("Warning: CF_Clu_VehicleSpeed not found, assuming 0 km/h")
 
       # Calculate lead car's absolute speed
       vLead = vEgo_km + rSpd
@@ -108,8 +108,9 @@ class EsccRadarInterfaceBase:
       # Validity check
       valid = False
       if msg['ACC_ObjStatus']:
-        if vEgo_km > 35.0 and dRel <= self.previous:  # Lead car moving > 45 km/h
+        if dRel <= self.previous:  # Lead car moving > 45 km/h
           valid = True
+        self.previous = dRel
         # Optional: Stationary condition (if still desired)
         # elif abs(vLead) < 1.0:  # Stationary lead car
         #   valid = True
@@ -121,7 +122,7 @@ class EsccRadarInterfaceBase:
       #   valid = True
       # if msg['ACC_ObjStatus'] and (dRel <= self.previous or dRel < 7):
       #   valid = True
-      self.previous = dRel
+
 
       #valid = msg['ACC_ObjStatus']
       # if valid:
