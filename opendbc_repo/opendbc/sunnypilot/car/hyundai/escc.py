@@ -95,7 +95,14 @@ class EsccRadarInterfaceBase:
 
       # Fetch vehicle speed from CAN data (CLU15 message)
       try:
-        vEgo_km = self.rcp.vl['CLU15']['CF_Clu_VehicleSpeed']  # Speed in km/h
+        whl_spd_fl = self.rcp.vl['WHL_SPD11']['WHL_SPD_FL']
+        whl_spd_fr = self.rcp.vl['WHL_SPD11']['WHL_SPD_FR']
+        whl_spd_rl = self.rcp.vl['WHL_SPD11']['WHL_SPD_RL']
+        whl_spd_rr = self.rcp.vl['WHL_SPD11']['WHL_SPD_RR']
+      # Average all four wheel speeds for vEgo
+        vEgo_km = (whl_spd_fl + whl_spd_fr + whl_spd_rl + whl_spd_rr) / 4
+      #try:
+        #vEgo_km = self.rcp.vl['CLU15']['CF_Clu_VehicleSpeed']  # Speed in km/h
         print(vEgo_km)
       except KeyError:
         # Fallback if signal isn’t available
