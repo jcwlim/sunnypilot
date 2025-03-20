@@ -107,7 +107,7 @@ class EsccRadarInterfaceBase:
       except KeyError:
         # Fallback if signal isn’t available
         vEgo_km = 0.0
-        #print("Warning: CF_Clu_VehicleSpeed not found, assuming 0 km/h")
+        print("AaWarning: CF_Clu_VehicleSpeed not found, assuming 0 km/h")
 
       # Calculate lead car's absolute speed
       vLead = vEgo_km + rSpd
