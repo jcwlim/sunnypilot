@@ -117,8 +117,7 @@ class EsccRadarInterfaceBase:
       #if msg['ACC_ObjStatus']:
       if dRel <= self.previous:  # Lead car moving > 45 km/h
           valid = True
-      if dRel < 150:
-        valid = True
+
       self.previous = dRel
         # Optional: Stationary condition (if still desired)
         # elif abs(vLead) < 1.0:  # Stationary lead car
@@ -153,10 +152,10 @@ class EsccRadarInterfaceBase:
         # Calculate aRel
         vRel_mps = self.pts[ii].vRel #/ 3.6  # Convert km/h to m/s
         aRel = (vRel_mps - self.prev_vRel) #/ 0.02  # 50 Hz = 0.02 s
-        self.pts[ii].aRel = -aRel  # m/s²
+        self.pts[ii].aRel = aRel  # m/s²
         self.prev_vRel = vRel_mps  # Update previous vRel
         self.pts[ii].yvRel = float('nan')
-        print(aRel)
+        print(dRel)
       else:
         del self.pts[ii]
 
