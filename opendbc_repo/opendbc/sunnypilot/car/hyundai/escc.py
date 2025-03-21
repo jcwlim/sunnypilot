@@ -101,10 +101,10 @@ class EsccRadarInterfaceBase:
       #try:
         #vEgo_km = self.rcp.vl['CLU15']['CF_Clu_VehicleSpeed']  # Speed in km/h
         print(vEgo_km)
-      except KeyError:
+      except KeyError as e:
         # Fallback if signal isn’t available
         vEgo_km = 0.0
-        #print("AaWarning: CF_Clu_VehicleSpeed not found, assuming 0 km/h")
+        print(f"KeyError: {e}")
 
       # Calculate lead car's absolute speed
       vLead = vEgo_km + rSpd
