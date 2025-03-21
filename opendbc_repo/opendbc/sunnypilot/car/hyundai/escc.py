@@ -95,12 +95,9 @@ class EsccRadarInterfaceBase:
 
       # Fetch vehicle speed from CAN data (CLU15 message)
       try:
-        whl_spd_fl = self.rcp.vl['WHL_SPD11']['WHL_SPD_FL']
-        whl_spd_fr = self.rcp.vl['WHL_SPD11']['WHL_SPD_FR']
-        whl_spd_rl = self.rcp.vl['WHL_SPD11']['WHL_SPD_RL']
-        whl_spd_rr = self.rcp.vl['WHL_SPD11']['WHL_SPD_RR']
+        hspeed = structs.CarState()
       # Average all four wheel speeds for vEgo
-        vEgo_km = (whl_spd_fl + whl_spd_fr + whl_spd_rl + whl_spd_rr) / 4
+        vEgo_km = hspeed.vEgo
       #try:
         #vEgo_km = self.rcp.vl['CLU15']['CF_Clu_VehicleSpeed']  # Speed in km/h
         print(vEgo_km)
@@ -150,12 +147,12 @@ class EsccRadarInterfaceBase:
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
         self.pts[ii].vRel = msg['ACC_ObjRelSpd']  # km/h
         # Calculate aRel
-        vRel_mps = self.pts[ii].vRel #/ 3.6  # Convert km/h to m/s
-        aRel = (vRel_mps - self.prev_vRel) #/ 0.02  # 50 Hz = 0.02 s
+        vRel_mps = self.pts[ii].vRel / 3.6  # Convert km/h to m/s
+        aRel = (vRel_mps - self.prev_vRel) / 0.02  # 50 Hz = 0.02 s
         self.pts[ii].aRel = aRel  # m/s²
         self.prev_vRel = vRel_mps  # Update previous vRel
         self.pts[ii].yvRel = float('nan')
-        print(dRel)
+        #print(dRel)
       else:
         del self.pts[ii]
 
