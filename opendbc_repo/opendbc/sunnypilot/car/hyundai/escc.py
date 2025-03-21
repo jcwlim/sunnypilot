@@ -117,6 +117,8 @@ class EsccRadarInterfaceBase:
       #if msg['ACC_ObjStatus']:
       if dRel <= self.previous:  # Lead car moving > 45 km/h
           valid = True
+      if dRel < 150:
+        valid = True
       self.previous = dRel
         # Optional: Stationary condition (if still desired)
         # elif abs(vLead) < 1.0:  # Stationary lead car
