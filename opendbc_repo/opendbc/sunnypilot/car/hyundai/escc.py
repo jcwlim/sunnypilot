@@ -1,7 +1,7 @@
 from opendbc.can.parser import CANParser
 from opendbc.car import structs
 from opendbc.car.hyundai.values import DBC
-import math
+#import math
 
 from opendbc.sunnypilot.car.hyundai.values import HyundaiFlagsSP
 
@@ -112,11 +112,11 @@ class EsccRadarInterfaceBase:
 
       # Validity check
       valid = False
-      #if msg['ACC_ObjStatus']:
-      if dRel <= self.previous:  # Lead car moving > 45 km/h
+      if msg['ACC_ObjStatus']:
+        if dRel <= self.previous:  # Lead car moving > 45 km/h
           valid = True
 
-      self.previous = dRel
+        self.previous = dRel
         # Optional: Stationary condition (if still desired)
         # elif abs(vLead) < 1.0:  # Stationary lead car
         #   valid = True
@@ -143,7 +143,8 @@ class EsccRadarInterfaceBase:
       #   del self.pts[ii]
 
       if valid:
-        increment = 1 + math.log1p(dRel)
+        #increment = 1 + math.log1p(dRel)
+        increment = 1 + (dRel * 0.2)
         self.pts[ii].measured = True
         self.pts[ii].dRel = dRel + increment #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
