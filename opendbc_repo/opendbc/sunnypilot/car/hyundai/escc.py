@@ -1,6 +1,7 @@
 from opendbc.can.parser import CANParser
 from opendbc.car import structs
 from opendbc.car.hyundai.values import DBC
+import math
 
 from opendbc.sunnypilot.car.hyundai.values import HyundaiFlagsSP
 
@@ -142,8 +143,9 @@ class EsccRadarInterfaceBase:
       #   del self.pts[ii]
 
       if valid:
+        increment = 1 + math.log1p(dRel)
         self.pts[ii].measured = True
-        self.pts[ii].dRel = msg['ACC_ObjDist'] + 3
+        self.pts[ii].dRel = dRel + increment #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
         self.pts[ii].vRel = msg['ACC_ObjRelSpd']  # km/h
         # Calculate aRel
