@@ -143,7 +143,7 @@ class EsccRadarInterfaceBase:
 
       if valid:
         self.pts[ii].measured = True
-        self.pts[ii].dRel = msg['ACC_ObjDist']
+        self.pts[ii].dRel = msg['ACC_ObjDist'] + 3
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
         self.pts[ii].vRel = msg['ACC_ObjRelSpd']  # km/h
         # Calculate aRel
