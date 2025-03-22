@@ -101,7 +101,7 @@ class EsccRadarInterfaceBase:
         vEgo_km = hspeed.vEgo
       #try:
         #vEgo_km = self.rcp.vl['CLU15']['CF_Clu_VehicleSpeed']  # Speed in km/h
-        print(vEgo_km)
+        #print(vEgo_km)
       except KeyError as e:
         # Fallback if signal isn’t available
         vEgo_km = 0.0
@@ -154,7 +154,7 @@ class EsccRadarInterfaceBase:
         self.pts[ii].aRel = aRel  # m/s²
         self.prev_vRel = vRel_mps  # Update previous vRel
         self.pts[ii].yvRel = float('nan')
-        #print(dRel)
+        print(dRel)
       else:
         del self.pts[ii]
 
