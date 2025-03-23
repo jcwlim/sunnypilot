@@ -150,7 +150,7 @@ class EsccRadarInterfaceBase:
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
         self.pts[ii].vRel = msg['ACC_ObjRelSpd']  # km/h
         # Calculate aRel
-        vRel_mps = self.pts[ii].vRel / 3.6  # Convert km/h to m/s
+        vRel_mps = self.pts[ii].vRel #/ 3.6  # Convert km/h to m/s
         aRel = (vRel_mps - self.prev_vRel) / 0.02  # 50 Hz = 0.02 s
         self.pts[ii].aRel = aRel  # m/s²
         self.prev_vRel = vRel_mps  # Update previous vRel
