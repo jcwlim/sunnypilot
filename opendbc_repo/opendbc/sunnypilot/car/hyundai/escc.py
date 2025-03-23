@@ -1,7 +1,7 @@
 from opendbc.can.parser import CANParser
 from opendbc.car import structs
 from opendbc.car.hyundai.values import DBC
-from cereal import car
+#from cereal import car
 #import math
 
 from opendbc.sunnypilot.car.hyundai.values import HyundaiFlagsSP
@@ -97,12 +97,12 @@ class EsccRadarInterfaceBase:
 
       # Fetch vehicle speed from CAN data (CLU15 message)
       try:
-        hspeed = car.CarState
+        #hspeed = car.CarState
       # Average all four wheel speeds for vEgo
-        vEgo_km = hspeed.vEgo
+        vEgo_km = 0.0 #hspeed.vEgo
       #try:
         #vEgo_km = self.rcp.vl['CLU15']['CF_Clu_VehicleSpeed']  # Speed in km/h
-        print(vEgo_km)
+        #print(vEgo_km)
       except KeyError as e:
         # Fallback if signal isn’t available
         vEgo_km = 0.0
