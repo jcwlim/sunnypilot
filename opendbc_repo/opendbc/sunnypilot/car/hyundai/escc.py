@@ -127,8 +127,8 @@ class EsccRadarInterfaceBase:
         self.smoothvRel = (self.smoothing * rSpd + (1 - self.smoothing) * self.smoothvRel)
 
 
-      if vEgo_km <= 15:
-        valid = True
+      #if vEgo_km <= 15:
+        #valid = True
         
       if dRel >= 8 and dRel <= 9.1:
         valid = False
