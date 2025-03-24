@@ -128,7 +128,7 @@ class EsccRadarInterfaceBase:
 
 
       if vEgo_km <= 20:
-        valid = True
+        valid = False
 
       # dRel = msg['ACC_ObjDist']
 
