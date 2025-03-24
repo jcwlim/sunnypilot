@@ -127,8 +127,8 @@ class EsccRadarInterfaceBase:
         self.smoothvRel = (self.smoothing * rSpd + (1 - self.smoothing) * self.smoothvRel)
 
 
-      if vEgo_km <= 20:
-        valid = False
+      if vEgo_km <= 15:
+        valid = True
 
       # dRel = msg['ACC_ObjDist']
 
