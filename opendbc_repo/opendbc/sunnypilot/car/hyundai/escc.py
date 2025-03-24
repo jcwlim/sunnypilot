@@ -137,7 +137,7 @@ class EsccRadarInterfaceBase:
         increment = (dRel * 0.2)
         fn = dRel + increment
         if dRel >= 150:
-          fn = 0
+          fn = 3
         self.pts[ii].measured = True if vEgo_km >= 40 else False
         self.pts[ii].dRel = fn #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
