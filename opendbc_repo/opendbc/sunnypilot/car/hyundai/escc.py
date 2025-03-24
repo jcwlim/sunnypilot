@@ -147,7 +147,7 @@ class EsccRadarInterfaceBase:
         #increment = 1 + math.log1p(dRel)
         increment = (dRel * 0.2)
         fn = dRel + increment
-        if dRel => 150:
+        if dRel >= 150:
           fn = 0
         self.pts[ii].measured = True
         self.pts[ii].dRel = fn #msg['ACC_ObjDist']
