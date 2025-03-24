@@ -2,6 +2,7 @@ from opendbc.can.parser import CANParser
 from opendbc.car import structs
 from opendbc.car.hyundai.values import DBC
 #from cereal import car
+from cereal.messaging import SubMaster
 #import math
 
 from opendbc.sunnypilot.car.hyundai.values import HyundaiFlagsSP
@@ -81,6 +82,9 @@ class EsccRadarInterfaceBase:
     self.use_escc = False
     self.previous = 160
     self.prev_vRel = 0.0  # Add to store previous vRel
+    self.sm = SubMaster(["deviceState", "carState", "roadCameraState", "liveCalibration", "driverMonitoringState", "carControl"])
+    self.smoothing = 0.8
+    self.smoothvRel = 0.0
 
   def update_escc(self, ret):
     for ii in range(1):
@@ -97,12 +101,10 @@ class EsccRadarInterfaceBase:
 
       # Fetch vehicle speed from CAN data (CLU15 message)
       try:
-        #hspeed = car.CarState
+        self.sm.update(0)
       # Average all four wheel speeds for vEgo
-        vEgo_km = 0.0 #hspeed.vEgo
-      #try:
-        #vEgo_km = self.rcp.vl['CLU15']['CF_Clu_VehicleSpeed']  # Speed in km/h
-        #print(vEgo_km)
+        vEgo_km = self.sm["carState"].vEgo #hspeed.vEgo
+        print(vEgo_km)
       except KeyError as e:
         # Fallback if signal isn’t available
         vEgo_km = 0.0
@@ -111,6 +113,7 @@ class EsccRadarInterfaceBase:
       # Calculate lead car's absolute speed
       vLead = vEgo_km + rSpd
 
+
       # Validity check
       valid = False
       if msg['ACC_ObjStatus']:
@@ -118,6 +121,10 @@ class EsccRadarInterfaceBase:
           valid = True
 
         self.previous = dRel
+        if self.smoothvRel == 0.0:
+          self.smoothvRel = rSpd
+        else:
+          self.smoothvRel = (self.smoothing * rSpd + (1 - self.smoothing) * self.smoothvRel)
         # Optional: Stationary condition (if still desired)
         # elif abs(vLead) < 1.0:  # Stationary lead car
         #   valid = True
@@ -152,10 +159,10 @@ class EsccRadarInterfaceBase:
         self.pts[ii].measured = True
         self.pts[ii].dRel = fn #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
-        self.pts[ii].vRel = msg['ACC_ObjRelSpd']  # km/h
+        self.pts[ii].vRel = self.smoothvRel #msg['ACC_ObjRelSpd']  # km/h
         # Calculate aRel
         vRel_mps = self.pts[ii].vRel #/ 3.6  # Convert km/h to m/s
-        aRel = (vRel_mps - self.prev_vRel) / 0.02  # 50 Hz = 0.02 s
+        aRel = (vRel_mps - self.prev_vRel) / 0.05  # 50 Hz = 0.02 s
         self.pts[ii].aRel = aRel  # m/s²
         self.prev_vRel = vRel_mps  # Update previous vRel
         self.pts[ii].yvRel = float('nan')
