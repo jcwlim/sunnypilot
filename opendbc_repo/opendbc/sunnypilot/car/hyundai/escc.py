@@ -103,8 +103,8 @@ class EsccRadarInterfaceBase:
       try:
         self.sm.update(0)
       # Average all four wheel speeds for vEgo
-        vEgo_km = self.sm["carState"].vEgo #hspeed.vEgo
-        print(vEgo_km)
+        vEgo_km = self.sm["carState"].vEgo * 3.3 #hspeed.vEgo
+        print(f"Car Speed: {vEgo_km}")
       except KeyError as e:
         # Fallback if signal isn’t available
         vEgo_km = 0.0
@@ -121,34 +121,16 @@ class EsccRadarInterfaceBase:
           valid = True
 
         self.previous = dRel
-        if self.smoothvRel == 0.0:
-          self.smoothvRel = rSpd
-        else:
-          self.smoothvRel = (self.smoothing * rSpd + (1 - self.smoothing) * self.smoothvRel)
-        # Optional: Stationary condition (if still desired)
-        # elif abs(vLead) < 1.0:  # Stationary lead car
-        #   valid = True
+      if self.smoothvRel == 0.0:
+        self.smoothvRel = rSpd
+      else:
+        self.smoothvRel = (self.smoothing * rSpd + (1 - self.smoothing) * self.smoothvRel)
+
+
+      if vEgo_km <= 20:
+        valid = True
 
       # dRel = msg['ACC_ObjDist']
-
-      # valid = False
-      # if msg['ACC_ObjStatus'] and (dRel <= self.previous):
-      #   valid = True
-      # if msg['ACC_ObjStatus'] and (dRel <= self.previous or dRel < 7):
-      #   valid = True
-
-
-      #valid = msg['ACC_ObjStatus']
-      # if valid:
-      #   self.pts[ii].measured = True
-      #   self.pts[ii].dRel = msg['ACC_ObjDist']
-      #   self.pts[ii].yRel = -msg['ACC_ObjLatPos']
-      #   self.pts[ii].vRel = msg['ACC_ObjRelSpd']
-      #   self.pts[ii].aRel = float('nan')  # TODO-SP: calculate from ACC_ObjRelSpd and with timestep 50Hz (needs to modify in interfaces.py)
-      #   self.pts[ii].yvRel = float('nan')
-
-      # else:
-      #   del self.pts[ii]
 
       if valid:
         #increment = 1 + math.log1p(dRel)
@@ -156,7 +138,7 @@ class EsccRadarInterfaceBase:
         fn = dRel + increment
         if dRel >= 150:
           fn = 0
-        self.pts[ii].measured = True
+        self.pts[ii].measured = True if vEgo_km >= 40 else False
         self.pts[ii].dRel = fn #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
         self.pts[ii].vRel = self.smoothvRel #msg['ACC_ObjRelSpd']  # km/h
@@ -166,7 +148,7 @@ class EsccRadarInterfaceBase:
         self.pts[ii].aRel = aRel  # m/s²
         self.prev_vRel = vRel_mps  # Update previous vRel
         self.pts[ii].yvRel = float('nan')
-        #print(dRel)
+        print(f"Lead Distance: {fn}")
       else:
         del self.pts[ii]
 
