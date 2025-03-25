@@ -103,7 +103,7 @@ class EsccRadarInterfaceBase:
       try:
         self.sm.update(0)
       # Average all four wheel speeds for vEgo
-        vEgo_km = self.sm["carState"].vEgo * 3.3 #hspeed.vEgo
+        vEgo_km = self.sm["carState"].vEgo * 3.6 #hspeed.vEgo
         print(f"Car Speed: {vEgo_km}")
       except KeyError as e:
         # Fallback if signal isn’t available
@@ -129,10 +129,11 @@ class EsccRadarInterfaceBase:
 
       #if vEgo_km <= 15:
         #valid = True
-        
+
       if dRel >= 8 and dRel <= 9.1:
-        valid = False
-        
+        #valid = False
+        self.smoothvRel = 1
+
       if vEgo_km <= 3:
         valid = False
 
@@ -157,6 +158,7 @@ class EsccRadarInterfaceBase:
         print(f"Lead Distance: {fn}")
       else:
         del self.pts[ii]
+        self.smoothvRel = 0
 
     ret.points = list(self.pts.values())
     return ret
