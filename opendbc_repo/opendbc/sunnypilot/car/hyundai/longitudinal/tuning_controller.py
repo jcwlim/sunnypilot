@@ -58,7 +58,7 @@ class LongitudinalTuningController:
     # Blend planned acceleration with current acceleration.
     planned_accel = CC.actuators.accel
     current_accel = CS.out.vEgo
-    blended_value = 0.50 * planned_accel + 0.50 * current_accel
+    blended_value = 0.65 * planned_accel + 0.35 * current_accel
     delta = blended_value - self.state.accel_last_jerk
 
     self.state.jerk = math.copysign(delta * delta, delta)
