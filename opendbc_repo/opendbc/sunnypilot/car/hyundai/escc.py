@@ -77,6 +77,7 @@ class EsccRadarInterfaceBase:
     self.ESCC = EnhancedSmartCruiseControl(CP, CP_SP)
     self.track_id = 0
     self.use_escc = False
+    self.previous = 150
 
   def update_escc(self, ret):
     for ii in range(1):
@@ -88,10 +89,17 @@ class EsccRadarInterfaceBase:
         self.pts[ii].trackId = self.track_id
         self.track_id += 1
 
-      valid = msg['ACC_ObjStatus']
+      #valid = msg['ACC_ObjStatus']
+      drel = msg['ACC_ObjDist']
+      valid = False
+      if msg['ACC_ObjStatus'] and drel <= self.previous:
+        valid = True
+        
+      self.previous = drel
+      
       if valid:
         self.pts[ii].measured = True
-        self.pts[ii].dRel = msg['ACC_ObjDist']
+        self.pts[ii].dRel = drel + (drel * 0.4) #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
         self.pts[ii].vRel = msg['ACC_ObjRelSpd']
         self.pts[ii].aRel = float('nan')  # TODO-SP: calculate from ACC_ObjRelSpd and with timestep 50Hz (needs to modify in interfaces.py)
