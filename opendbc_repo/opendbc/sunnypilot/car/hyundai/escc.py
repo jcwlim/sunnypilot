@@ -94,7 +94,7 @@ class EsccRadarInterfaceBase:
 
       # Fetch vehicle speed from CAN data (CLU15 message)
       try:
-        #self.sm.update(0)
+        self.sm.update()
         # Average all four wheel speeds for vEgo
         vEgo_km = self.sm["carState"].vEgo * 3.6 #hspeed.vEgo
         print(f"Car Speed: {vEgo_km}")
