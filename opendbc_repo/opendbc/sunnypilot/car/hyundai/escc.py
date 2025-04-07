@@ -107,16 +107,21 @@ class EsccRadarInterfaceBase:
       drel = msg['ACC_ObjDist']
       valid = False
       if msg['ACC_ObjStatus'] and drel <= self.previous:
+        if drel < 4:
+          drel = drel + 1
+        else:
+          drel = drel + (drel * 0.5)
         valid = True
 
-      if vEgo_km <= 15 and drel <= self.previous and drel < 150:
+      if vEgo_km <= 10 and drel <= self.previous and drel < 150:
+        drel = drel + 1
         valid = True
 
-      self.previous = drel
+      self.previous = msg['ACC_ObjDist']
 
       if valid:
         self.pts[ii].measured = True if vEgo_km >= 40 else False
-        self.pts[ii].dRel = drel + (drel * 0.5) #msg['ACC_ObjDist']
+        self.pts[ii].dRel = drel #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
         self.pts[ii].vRel = msg['ACC_ObjRelSpd']
         self.pts[ii].aRel = float('nan')  # TODO-SP: calculate from ACC_ObjRelSpd and with timestep 50Hz (needs to modify in interfaces.py)
