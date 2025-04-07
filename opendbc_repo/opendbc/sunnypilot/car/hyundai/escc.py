@@ -3,6 +3,7 @@ from opendbc.car import structs
 from opendbc.car.hyundai.values import DBC
 
 from opendbc.sunnypilot.car.hyundai.values import HyundaiFlagsSP
+from cereal.messaging import SubMaster
 
 ESCC_MSG = 0x2AB
 
@@ -75,6 +76,7 @@ class EsccRadarInterfaceBase:
 
   def __init__(self, CP: structs.CarParams, CP_SP: structs.CarParamsSP):
     self.ESCC = EnhancedSmartCruiseControl(CP, CP_SP)
+    self.sm = SubMaster(["carState"])
     self.track_id = 0
     self.use_escc = False
     self.previous = 150
@@ -89,17 +91,32 @@ class EsccRadarInterfaceBase:
         self.pts[ii].trackId = self.track_id
         self.track_id += 1
 
+
+      # Fetch vehicle speed from CAN data (CLU15 message)
+      try:
+        #self.sm.update(0)
+        # Average all four wheel speeds for vEgo
+        vEgo_km = self.sm["carState"].vEgo * 3.6 #hspeed.vEgo
+        print(f"Car Speed: {vEgo_km}")
+      except KeyError as e:
+        # Fallback if signal isn’t available
+        vEgo_km = 0.0
+        print(f"KeyError: {e}")
+
       #valid = msg['ACC_ObjStatus']
       drel = msg['ACC_ObjDist']
       valid = False
       if msg['ACC_ObjStatus'] and drel <= self.previous:
         valid = True
-        
+
+      if vEgo_km <= 15 and drel <= self.previous and drel < 150:
+        valid = True
+
       self.previous = drel
-      
+
       if valid:
-        self.pts[ii].measured = True
-        self.pts[ii].dRel = drel + (drel * 0.4) #msg['ACC_ObjDist']
+        self.pts[ii].measured = True if vEgo_km >= 40 else False
+        self.pts[ii].dRel = drel + (drel * 0.5) #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
         self.pts[ii].vRel = msg['ACC_ObjRelSpd']
         self.pts[ii].aRel = float('nan')  # TODO-SP: calculate from ACC_ObjRelSpd and with timestep 50Hz (needs to modify in interfaces.py)
