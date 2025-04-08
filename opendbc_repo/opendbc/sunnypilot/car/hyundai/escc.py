@@ -116,8 +116,10 @@ class EsccRadarInterfaceBase:
       self.previous = drel
       if drel < 7:
         drel = drel + 1
+      elif drel < 11 and drel >= 7:
+        drel = drel + 2
       else:
-        drel = drel + 5
+        drel = drel + 4
 
       if valid:
         self.pts[ii].measured = True if vEgo_km >= 40 else False
