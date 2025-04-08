@@ -112,8 +112,9 @@ class EsccRadarInterfaceBase:
 
       # if vEgo_km <= 10 and drel <= self.previous and drel < 150:
       #   valid = True
+      if msg['ACC_ObjStatus']:
+        self.previous = drel
 
-      self.previous = drel
       if drel < 7:
         drel = drel + 1
       elif drel < 11 and drel >= 7:
