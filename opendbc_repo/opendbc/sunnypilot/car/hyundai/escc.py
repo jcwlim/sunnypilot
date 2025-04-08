@@ -119,6 +119,8 @@ class EsccRadarInterfaceBase:
         drel = drel + 1
       elif drel < 11 and drel >= 7:
         drel = drel + 2
+      elif drel < 15 and drel >= 11:
+        drel = drel + 3
       else:
         drel = drel + 4
 
