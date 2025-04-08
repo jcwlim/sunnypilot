@@ -114,7 +114,7 @@ class EsccRadarInterfaceBase:
       #   valid = True
 
       self.previous = drel
-      if drel < 4:
+      if drel < 7:
         drel = drel + 1
       else:
         drel = drel + 5
