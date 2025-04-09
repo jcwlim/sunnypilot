@@ -80,6 +80,7 @@ class EsccRadarInterfaceBase:
     self.track_id = 0
     self.use_escc = False
     self.previous = 150
+    self.prev_vRel = 0.0
 
   def update_escc(self, ret):
     for ii in range(1):
@@ -97,7 +98,7 @@ class EsccRadarInterfaceBase:
         self.sm.update()
         # Average all four wheel speeds for vEgo
         vEgo_km = self.sm["carState"].vEgo * 3.6 #hspeed.vEgo
-        print(f"Car Speed: {vEgo_km}")
+        #print(f"Car Speed: {vEgo_km}")
       except KeyError as e:
         # Fallback if signal isn’t available
         vEgo_km = 0.0
@@ -123,8 +124,12 @@ class EsccRadarInterfaceBase:
         self.pts[ii].dRel = drel #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
         self.pts[ii].vRel = msg['ACC_ObjRelSpd']
-        self.pts[ii].aRel = 0 # Simulate same speed first float('nan')  # TODO-SP: calculate from ACC_ObjRelSpd and with timestep 50Hz (needs to modify in interfaces.py)
+        vRel_mps = self.pts[ii].vRel #/ 3.6  # Convert km/h to m/s
+        aRel = (vRel_mps - self.prev_vRel)
+        self.pts[ii].aRel = aRel # Simulate same speed first float('nan')  # TODO-SP: calculate from ACC_ObjRelSpd and with timestep 50Hz (needs to modify in interfaces.py)
+        self.prev_vRel = vRel_mps  # Update previous vRel
         self.pts[ii].yvRel = float('nan')
+        print(f"aRel: {aRel}")
 
       else:
         del self.pts[ii]
