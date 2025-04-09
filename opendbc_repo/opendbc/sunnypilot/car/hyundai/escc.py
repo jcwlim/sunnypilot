@@ -105,6 +105,7 @@ class EsccRadarInterfaceBase:
 
       #valid = msg['ACC_ObjStatus']
       drel = msg['ACC_ObjDist']
+      drel += min(6, 1 + max(0, (drel - 7) / 4))
       valid = False
       if msg['ACC_ObjStatus'] and drel <= self.previous:
       #if drel <= self.previous:
@@ -115,14 +116,7 @@ class EsccRadarInterfaceBase:
       if msg['ACC_ObjStatus']:
         self.previous = drel
 
-      if drel < 7:
-        drel = drel + 1
-      elif drel < 11 and drel >= 7:
-        drel = drel + 2
-      elif drel < 15 and drel >= 11:
-        drel = drel + 3
-      else:
-        drel = drel + 4
+
 
       if valid:
         self.pts[ii].measured = True if vEgo_km >= 40 else False
