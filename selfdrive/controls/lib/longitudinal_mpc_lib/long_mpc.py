@@ -229,7 +229,7 @@ class LongitudinalMpc:
     self.reset()
     self.source = SOURCES[2]
 
-    self.lead_danger_factor = LEAD_DANGER_FACTOR
+    #self.lead_danger_factor = LEAD_DANGER_FACTOR
 
   def reset(self):
     # self.solver = AcadosOcpSolverCython(MODEL_NAME, ACADOS_SOLVER_TYPE, N)
@@ -348,7 +348,7 @@ class LongitudinalMpc:
 
     # Update in ACC mode or ACC/e2e blend
     if self.mode == 'acc':
-      #self.params[:,5] = LEAD_DANGER_FACTOR
+      self.params[:,5] = LEAD_DANGER_FACTOR
 
       # Fake an obstacle for cruise, this ensures smooth acceleration to set speed
       # when the leads are no factor.
@@ -365,9 +365,9 @@ class LongitudinalMpc:
       # These are not used in ACC mode
       x[:], v[:], a[:], j[:] = 0.0, 0.0, 0.0, 0.0
 
-      safe_distance = lead_0_obstacle[0] - get_safe_obstacle_distance(v_ego, COMFORT_BRAKE, STOP_DISTANCE)
-      self.lead_danger_factor = np.interp(safe_distance, [-30.0, 0.0], [0.9, LEAD_DANGER_FACTOR])
-      self.params[:,5] = self.lead_danger_factor
+      #safe_distance = lead_0_obstacle[0] - get_safe_obstacle_distance(v_ego, COMFORT_BRAKE, STOP_DISTANCE)
+      #self.lead_danger_factor = np.interp(safe_distance, [-30.0, 0.0], [0.9, LEAD_DANGER_FACTOR])
+      #self.params[:,5] = self.lead_danger_factor
 
     elif self.mode == 'blended':
       self.params[:,5] = 1.0
