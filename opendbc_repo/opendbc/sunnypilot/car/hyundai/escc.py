@@ -103,7 +103,10 @@ class EsccRadarInterfaceBase:
       drel += min(6, 1 + max(0, (drel - 7) / 4))
       vrel = msg['ACC_ObjRelSpd']
 
-      reset_pts = abs(drel - self.previous) > 3 or abs(vrel - self.prev_vRel) > 1 or drel <= 11
+      reset_pts = abs(drel - self.previous) > 3 or abs(vrel - self.prev_vRel) > 1
+      if drel <= 15:
+        reset_pts = False
+
       valid = False
       if msg['ACC_ObjStatus'] and drel <= self.previous:
       #if drel <= self.previous:
@@ -136,7 +139,7 @@ class EsccRadarInterfaceBase:
         print(f"aRel: {self.pts[ii].aRel}")
 
       else:
-        if ii in self.pts:
+        if ii in self.pts and drel > 15:
           del self.pts[ii]
 
     ret.points = list(self.pts.values())
