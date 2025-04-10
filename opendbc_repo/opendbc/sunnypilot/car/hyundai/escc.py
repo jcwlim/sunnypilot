@@ -100,11 +100,11 @@ class EsccRadarInterfaceBase:
 
       #valid = msg['ACC_ObjStatus']
       drel = msg['ACC_ObjDist']
-      #drel += min(6, 1 + max(0, (drel - 7) / 4))
+      drel += min(3, 1 + max(0, (drel - 7) / 4))
       vrel = msg['ACC_ObjRelSpd']
 
       reset_pts = abs(drel - self.previous) > 3 or abs(vrel - self.prev_vRel) > 1
-      if drel <= 30:
+      if drel <= 35:
         reset_pts = True
 
       valid = False
