@@ -136,7 +136,8 @@ class EsccRadarInterfaceBase:
         print(f"aRel: {self.pts[ii].aRel}")
 
       else:
-        del self.pts[ii]
+        if ii in self.pts:
+          del self.pts[ii]
 
     ret.points = list(self.pts.values())
     return ret
