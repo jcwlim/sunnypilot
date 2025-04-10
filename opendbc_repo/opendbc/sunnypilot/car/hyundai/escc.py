@@ -122,7 +122,7 @@ class EsccRadarInterfaceBase:
           self.pts[ii].trackId = self.track_id
           #self.track_id += 1
           self.track_id = min(1 - self.track_id, 1)
-          print("!!!Radar Point Reset!!!")
+          print(f"!!!Radar Point Reset!!!: {reset_pts}")
         self.pts[ii].measured = True if vEgo_km >= 40 else False
         self.pts[ii].dRel = drel #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
@@ -130,7 +130,7 @@ class EsccRadarInterfaceBase:
         vRel_mps = self.pts[ii].vRel #/ 3.6  # Convert km/h to m/s
         aRel = (vRel_mps - self.prev_vRel) / 0.02
         #self.pts[ii].aRel = -aRel if aRel = 0 else float('nan')  # Simulate same speed first float('nan')  # TODO-SP: calculate from ACC_ObjRelSpd and with timestep 50Hz (needs to modify in interfaces.py)
-        self.pts[ii].aRel = float('nan') if aRel == 0 else -aRel
+        self.pts[ii].aRel = float('nan') #if aRel == 0 else -aRel
         self.prev_vRel = vRel_mps  # Update previous vRel
         self.pts[ii].yvRel = float('nan')
         print(f"aRel: {self.pts[ii].aRel}")
