@@ -104,7 +104,7 @@ class EsccRadarInterfaceBase:
       vrel = msg['ACC_ObjRelSpd']
 
       reset_pts = abs(drel - self.previous) > 3 or abs(vrel - self.prev_vRel) > 1
-      if drel <= 35:
+      if drel <= 30:
         reset_pts = True
 
       valid = False
