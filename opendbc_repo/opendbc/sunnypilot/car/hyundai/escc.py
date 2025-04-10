@@ -87,12 +87,6 @@ class EsccRadarInterfaceBase:
       msg_src = "ESCC"
       msg = self.rcp.vl[msg_src]
 
-      if ii not in self.pts:
-        self.pts[ii] = structs.RadarData.RadarPoint()
-        self.pts[ii].trackId = self.track_id
-        self.track_id += 1
-
-
       # Fetch vehicle speed from CAN data (CLU15 message)
       try:
         self.sm.update()
@@ -107,6 +101,9 @@ class EsccRadarInterfaceBase:
       #valid = msg['ACC_ObjStatus']
       drel = msg['ACC_ObjDist']
       drel += min(6, 1 + max(0, (drel - 7) / 4))
+      vrel = msg['ACC_ObjRelSpd']
+
+      reset_pts = abs(drel - self.previous) > 3 or abs(vrel - self.prev_vRel) > 1
       valid = False
       if msg['ACC_ObjStatus'] and drel <= self.previous:
       #if drel <= self.previous:
@@ -117,13 +114,23 @@ class EsccRadarInterfaceBase:
       if msg['ACC_ObjStatus']:
         self.previous = drel
 
+      if ii not in self.pts or reset_pts:
+        self.pts[ii] = structs.RadarData.RadarPoint()
+        self.pts[ii].trackId = self.track_id
+        #self.track_id += 1
+        self.track_id = min(1 - self.track_id, 1)
+        print("!!!Radar Point Reset!!!")
+
+
+
+
 
 
       if valid:
         self.pts[ii].measured = True if vEgo_km >= 40 else False
         self.pts[ii].dRel = drel #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
-        self.pts[ii].vRel = msg['ACC_ObjRelSpd']
+        self.pts[ii].vRel = vrel #msg['ACC_ObjRelSpd']
         vRel_mps = self.pts[ii].vRel #/ 3.6  # Convert km/h to m/s
         aRel = (vRel_mps - self.prev_vRel)
         #self.pts[ii].aRel = -aRel if aRel = 0 else float('nan')  # Simulate same speed first float('nan')  # TODO-SP: calculate from ACC_ObjRelSpd and with timestep 50Hz (needs to modify in interfaces.py)
