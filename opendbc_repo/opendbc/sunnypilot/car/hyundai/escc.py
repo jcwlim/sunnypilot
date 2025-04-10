@@ -130,7 +130,7 @@ class EsccRadarInterfaceBase:
         self.pts[ii].aRel = float('nan') if aRel == 0 else -aRel
         self.prev_vRel = vRel_mps  # Update previous vRel
         self.pts[ii].yvRel = float('nan')
-        print(f"aRel: {aRel}")
+        print(f"aRel: {self.pts[ii].aRel}")
 
       else:
         del self.pts[ii]
