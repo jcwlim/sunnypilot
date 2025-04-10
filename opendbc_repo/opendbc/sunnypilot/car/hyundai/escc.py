@@ -103,7 +103,7 @@ class EsccRadarInterfaceBase:
       drel += min(6, 1 + max(0, (drel - 7) / 4))
       vrel = msg['ACC_ObjRelSpd']
 
-      reset_pts = abs(drel - self.previous) > 3 or abs(vrel - self.prev_vRel) > 1
+      reset_pts = abs(drel - self.previous) > 3 or abs(vrel - self.prev_vRel) > 1 or drel <= 11
       valid = False
       if msg['ACC_ObjStatus'] and drel <= self.previous:
       #if drel <= self.previous:
