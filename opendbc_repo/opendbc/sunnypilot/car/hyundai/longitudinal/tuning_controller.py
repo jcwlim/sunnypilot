@@ -79,7 +79,7 @@ class LongitudinalTuningController:
 
     accel_jerk = accel_jerk_max if long_control_state == LongCtrlState.pid else 1.0
     min_upper_jerk = self.car_config.jerk_limits[0] if (velocity > 3.611) else 0.60
-    min_lower_jerk = self.car_config.jerk_limits[0] if (velocity < 12.0) else 0.65
+    min_lower_jerk = self.car_config.jerk_limits[0] if (velocity < 12.0) else 0.625
 
     self.jerk_upper = min(max(min_upper_jerk, self.state.jerk), accel_jerk)
     self.jerk_lower = min(max(min_lower_jerk, -self.state.jerk), decel_jerk_max)
@@ -96,14 +96,14 @@ class LongitudinalTuningController:
 
   def calculate_a_value(self, CC: structs.CarControl) -> float:
     jerk = 5
-    jerk_number = jerk / 50   # This equals 0.1, but why not just 0.1? Maybe we can try self.jerk_lower?
+    jerk_number = float(jerk / 50)   # This equals 0.1, but why not just 0.1? Maybe we can try self.jerk_lower?
     if not CC.enabled:
       self.reset()
       return 0.0
 
     self.accel_raw = CC.actuators.accel
 
-    self.accel_value = np.clip(self.accel_raw, self.state.accel_last - jerk_number, self.state.accel_last + jerk_number)
+    self.accel_value = float(np.clip(self.accel_raw, self.state.accel_last - jerk_number, self.state.accel_last + jerk_number))
 
     self.state.accel_last = self.accel_value
 
