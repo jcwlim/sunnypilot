@@ -114,19 +114,15 @@ class EsccRadarInterfaceBase:
       if msg['ACC_ObjStatus']:
         self.previous = drel
 
-      if ii not in self.pts or reset_pts:
-        self.pts[ii] = structs.RadarData.RadarPoint()
-        self.pts[ii].trackId = self.track_id
-        #self.track_id += 1
-        self.track_id = min(1 - self.track_id, 1)
-        print("!!!Radar Point Reset!!!")
-
-
-
-
 
 
       if valid:
+        if ii not in self.pts or reset_pts:
+          self.pts[ii] = structs.RadarData.RadarPoint()
+          self.pts[ii].trackId = self.track_id
+          #self.track_id += 1
+          self.track_id = min(1 - self.track_id, 1)
+          print("!!!Radar Point Reset!!!")
         self.pts[ii].measured = True if vEgo_km >= 40 else False
         self.pts[ii].dRel = drel #msg['ACC_ObjDist']
         self.pts[ii].yRel = -msg['ACC_ObjLatPos']
