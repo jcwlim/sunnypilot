@@ -13,12 +13,12 @@ from opendbc.car.hyundai.values import CAR
 @dataclass
 class CarTuningConfig:
   v_ego_stopping: float = 0.25
-  v_ego_starting: float = 0.10
+  v_ego_starting: float = 0.1
   stopping_decel_rate: float = 0.40
   lookahead_jerk_bp: list[float] = field(default_factory=lambda: [5., 20.])
   lookahead_jerk_upper_v: list[float] = field(default_factory=lambda: [0.25, 0.5])
   lookahead_jerk_lower_v: list[float] = field(default_factory=lambda: [0.15, 0.3])
-  longitudinal_actuator_delay: float = 0.45
+  longitudinal_actuator_delay: float = 0.45 #or 0.02
   jerk_limits: float = 4.0
 
 
