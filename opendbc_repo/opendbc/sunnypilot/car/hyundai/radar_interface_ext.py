@@ -70,6 +70,7 @@ class RadarInterfaceExt(EsccRadarInterfaceBase):
       valid = msg['ACC_ObjDist'] < 204.6 if self.CP.flags & HyundaiFlags.CANFD_CAMERA_SCC else msg['ACC_ObjStatus']
       dRel = msg['ACC_ObjDist']
       #dRel += min(3, 2 + max(0, (dRel - 7) / 4))
+      dRel += 1
       vRel = msg['ACC_ObjRelSpd']
 
       reset_pts = abs(dRel - self.previous) > 3 or abs(vRel - self.prev_vRel) > 3 #1
