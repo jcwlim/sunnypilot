@@ -185,6 +185,10 @@ class CarInterface(CarInterfaceBase):
       stock_cp.pcmCruise = True
       ret.safetyParam |= HyundaiSafetyFlagsSP.NON_SCC
 
+    if 0x2AA in fingerprint[0]:
+      stock_cp.minSteerSpeed = 0.0
+      stock_cp.flags &= ~HyundaiFlags.MIN_STEER_32_MPH.value
+
     return ret
 
   @staticmethod
