@@ -12,7 +12,7 @@ from opendbc.car.hyundai.values import CAR
 
 @dataclass
 class CarTuningConfig:
-  v_ego_stopping: float = 0.25
+  v_ego_stopping: float = 0.1
   v_ego_starting: float = 0.10
   stopping_decel_rate: float = 0.40
   lookahead_jerk_bp: list[float] = field(default_factory=lambda: [5., 20.])
@@ -39,7 +39,7 @@ TUNING_CONFIGS = {
   "HYBRID": CarTuningConfig(
     v_ego_starting=0.15,
     stopping_decel_rate=0.45,
-    v_ego_stopping=0.4,
+    v_ego_stopping=0.1,
   ),
   "DEFAULT": CarTuningConfig(
     lookahead_jerk_bp=[2., 5., 20.],

@@ -18,6 +18,9 @@ class RadarInterfaceExt(EsccRadarInterfaceBase):
     self.CP_SP = CP_SP
 
     self.track_id = 0
+    self.previous = 150
+    self.prev_vRel = 0.0
+    self.pts_counter = 0
 
   @property
   def use_radar_interface_ext(self) -> bool:
@@ -64,22 +67,44 @@ class RadarInterfaceExt(EsccRadarInterfaceBase):
       msg_src = self.get_msg_src()
       msg = self.rcp.vl[msg_src]
 
-      if ii not in self.pts:
-        self.pts[ii] = structs.RadarData.RadarPoint()
-        self.pts[ii].trackId = self.track_id
-        self.track_id += 1
 
       valid = msg['ACC_ObjDist'] < 204.6 if self.CP.flags & HyundaiFlags.CANFD_CAMERA_SCC else msg['ACC_ObjStatus']
+      dRel = msg['ACC_ObjDist']
+      #dRel += min(3, 2 + max(0, (dRel - 7) / 4))
+      dRel += 1
+      vRel = msg['ACC_ObjRelSpd']
+
+      reset_pts = abs(dRel - self.previous) > 3 or abs(vRel - self.prev_vRel) > 3 #1
+      if dRel <= 16: # and self.pts_counter >= 5: # and dRel >=10: # and vEgo_km <= 40:
+        if self.pts_counter >= 25:
+          self.pts_counter = 0
+          reset_pts = True
+        self.pts_counter += 1
+
+      valid = False
+      if msg['ACC_ObjStatus']: # and dRel <= self.previous:
+        valid = True
+        self.previous = dRel
+
+      # if msg['ACC_ObjStatus']:
+      #   self.previous = dRel
       if valid:
+        if ii not in self.pts or reset_pts:
+          self.pts[ii] = structs.RadarData.RadarPoint()
+          self.pts[ii].trackId = self.track_id
+          self.track_id += 1
+          #self.track_id = min(1 - self.track_id, 1)
         self.pts[ii].measured = True
-        self.pts[ii].dRel = msg['ACC_ObjDist']
+        self.pts[ii].dRel = dRel #msg['ACC_ObjDist']
         self.pts[ii].yRel = float('nan')  # FIXME-SP: Only some cars have lateral position from SCC
         self.pts[ii].vRel = msg['ACC_ObjRelSpd']
+        self.prev_vRel = self.pts[ii].vRel
         self.pts[ii].aRel = float('nan')  # TODO-SP: calculate from ACC_ObjRelSpd and with timestep 50Hz (needs to modify in interfaces.py)
         self.pts[ii].yvRel = float('nan')
 
       else:
-        del self.pts[ii]
+        if ii in self.pts:
+          del self.pts[ii]
 
     ret.points = list(self.pts.values())
     return ret

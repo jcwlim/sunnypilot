@@ -132,10 +132,10 @@ class CarInterface(CarInterfaceBase):
     ret.radarUnavailable = RADAR_START_ADDR not in fingerprint[1] or Bus.radar not in DBC[ret.carFingerprint]
     ret.openpilotLongitudinalControl = alpha_long and ret.alphaLongitudinalAvailable
     ret.pcmCruise = not ret.openpilotLongitudinalControl
-    ret.startingState = True
+    ret.startingState = False
     ret.vEgoStarting = 0.1
-    ret.startAccel = 1.0
-    ret.longitudinalActuatorDelay = 0.5
+    ret.startAccel = 0.05
+    ret.longitudinalActuatorDelay = 0.02 #0.5
 
     if ret.openpilotLongitudinalControl:
       ret.safetyConfigs[-1].safetyParam |= HyundaiSafetyFlags.LONG.value
